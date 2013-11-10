@@ -86,7 +86,7 @@
     <Compile Include="Controllers\AssessmentsController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
-    <Compile Include="Filters\HttpsGuardFilter.cs" />
+    <Compile Include="Filters\HttpsRequiredDelegatingHandler.cs" />
     <Compile Include="Formatters\CustomXmlFormatter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
