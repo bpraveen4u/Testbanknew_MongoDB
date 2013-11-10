@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Web;
 
-namespace TestBank.Entity
+namespace TestBank.API.WebHost.Models
 {
-    public class Assessment : BaseEntity
+    public class AssessmentModel
     {
+        public ICollection<LinkModel> Links { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public double Duration { get; set; }
-        public virtual List<Question> Questions { get; set; }
+        public string Duration { get; set; }
     }
 }

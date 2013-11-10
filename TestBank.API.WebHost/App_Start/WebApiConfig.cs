@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using TestBank.API.WebHost.Formatters;
+using TestBank.API.WebHost.Infrastructure.AutoMapper;
+using System.Net.Http.Formatting;
+using Newtonsoft.Json.Serialization;
+using TestBank.API.WebHost.Infrastructure.Converters;
 
 namespace TestBank.API.WebHost
 {
@@ -10,10 +15,20 @@ namespace TestBank.API.WebHost
         public static void Register(HttpConfiguration config)
         {
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                name: "Assessments",
+                routeTemplate: "api/assessments/{id}",
+                defaults: new { controller = "assessments", id = RouteParameter.Optional }
             );
+
+            AutoMapperConfiguration.Configure();
+
+            //JSON serialization settings
+            var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().FirstOrDefault();
+            jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            jsonFormatter.SerializerSettings.Converters.Add(new LinkModelConverter());
+            //json.SerializerSettings..PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
+            //config.Formatters.Add(new CustomXmlFormatter());
         }
     }
 }

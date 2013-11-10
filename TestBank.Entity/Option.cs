@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TestBank.Entity
 {
-    public class Option
+    public class Option : BaseEntity
     {
         public int Id { get; set; }
         public string Nr { get; set; }
