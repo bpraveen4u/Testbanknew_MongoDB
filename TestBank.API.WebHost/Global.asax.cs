@@ -6,7 +6,7 @@ using System.Web.Http;
 using TestBank.API.WebHost.Infrastructure.DI;
 using Ninject;
 using TestBank.API.WebHost.App_Start;
-
+using TestBank.API.WebHost.Filters;
 
 namespace TestBank.API.WebHost
 {
@@ -24,6 +24,11 @@ namespace TestBank.API.WebHost
             //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             //RouteConfig.RegisterRoutes(RouteTable.Routes);
             //BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            //Message Handlers
+#if !DEBUG
+            GlobalConfiguration.Configuration.MessageHandlers.Add(new HttpsRequiredDelegatingHandler());
+#endif
         }
 
         private IKernel CreateKernel(HttpConfiguration config)
