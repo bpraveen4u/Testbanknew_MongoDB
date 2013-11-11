@@ -13,11 +13,11 @@ namespace TestBank.API.WebHost.Models
     public class ModelFactory
     {
         private UrlHelper urlHelper;
-        private UnitOfWork unitOfWork;
-        public ModelFactory(HttpRequestMessage request, UnitOfWork unitOfWork)
+        //private IUnitOfWork unitOfWork;
+        public ModelFactory(HttpRequestMessage request)
         {
             this.urlHelper = new UrlHelper(request);
-            this.unitOfWork = unitOfWork;
+            //this.unitOfWork = unitOfWork;
         }
 
         public AssessmentModel Create(Assessment assessment)

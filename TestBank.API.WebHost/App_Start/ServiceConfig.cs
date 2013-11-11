@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Ninject;
 using TestBank.Data;
+using TestBank.Business.Manager;
 
 namespace TestBank.API.WebHost.App_Start
 {
@@ -11,8 +12,8 @@ namespace TestBank.API.WebHost.App_Start
     {
         public static void RegisterServices(StandardKernel kernel)
         {
-            //kernel.Bind<TestBankContext>().ToSelf();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
+            kernel.Bind<AssessmentManager>().ToSelf();
         }
     }
 }

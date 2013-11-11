@@ -42,12 +42,6 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.0.1\lib\net40\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.0.1\lib\net40\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -85,7 +79,6 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AssessmentsController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Filters\HttpsRequiredDelegatingHandler.cs" />
     <Compile Include="Formatters\CustomXmlFormatter.cs" />
     <Compile Include="Global.asax.cs">
@@ -96,10 +89,19 @@
     <Compile Include="Infrastructure\Converters\LinkModelConverter.cs" />
     <Compile Include="Infrastructure\DI\NinjectResolver.cs" />
     <Compile Include="Infrastructure\DI\NinjectScope.cs" />
-    <Compile Include="Models\LinkModel.cs" />
-    <Compile Include="Models\ModelFactory.cs" />
-    <Compile Include="Models\QuestionModel.cs" />
-    <Compile Include="Models\AssessmentModel.cs" />
+    <Compile Include="Models\AssessmentModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\LinkModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\ModelFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\PagedModel.cs" />
+    <Compile Include="Models\QuestionModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +122,10 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TestBank.Business\TestBank.Business.csproj">
+      <Project>{8729CD89-170B-4F1C-9C67-E9A62EE15196}</Project>
+      <Name>TestBank.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TestBank.Data\TestBank.Data.csproj">
       <Project>{49B70C31-65F9-4470-817A-6528BB272923}</Project>
       <Name>TestBank.Data</Name>

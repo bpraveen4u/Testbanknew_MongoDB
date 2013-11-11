@@ -11,27 +11,27 @@ namespace TestBank.API.WebHost.Controllers
 {
     public abstract class BaseApiController : ApiController
     {
-        private UnitOfWork unitOfWork;
+        //private readonly IUnitOfWork unitOfWork;
         private ModelFactory modelFactory;
-        public BaseApiController(UnitOfWork unitOfWork)
-        {
-            this.unitOfWork = unitOfWork;
-        }
+        //public BaseApiController(IUnitOfWork unitOfWork)
+        //{
+        //    this.unitOfWork = unitOfWork;
+        //}
 
-        public UnitOfWork UnitOfWork 
-        {
-            get
-            {
-                return unitOfWork;
-            }
-        }
+        //public IUnitOfWork UnitOfWork 
+        //{
+        //    get
+        //    {
+        //        return unitOfWork;
+        //    }
+        //}
         protected ModelFactory TheModelFactory
         {
             get
             {
                 if (modelFactory == null)
                 {
-                    modelFactory = new ModelFactory(this.Request, unitOfWork);
+                    modelFactory = new ModelFactory(this.Request);
                 }
                 return modelFactory;
             }

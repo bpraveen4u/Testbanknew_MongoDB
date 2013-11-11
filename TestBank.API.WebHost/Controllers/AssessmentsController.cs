@@ -9,50 +9,51 @@ using TestBank.Entity;
 using AutoMapper;
 using TestBank.API.WebHost.Models;
 using System.Web.Http.Routing;
+using TestBank.Business.Manager;
 
 namespace TestBank.API.WebHost.Controllers
 {
     public class AssessmentsController : BaseApiController
     {
+        private readonly AssessmentManager manager;
         const int PAGE_SIZE = 2;
-        public AssessmentsController(UnitOfWork unitOfWork) : 
-            base(unitOfWork)
+        public AssessmentsController(AssessmentManager manager)
         {
+            this.manager = manager;
         }
 
         // GET api/assessments
-        public object GetAll(int page = 1)
+        public PagedModel<AssessmentModel> GetAll(int page = 1)
         {
             if (page < 1) page = 1;
-            var totalCount = UnitOfWork.AssessmentRepository.Get().Count();
-            var totalPages = Math.Ceiling((double) totalCount / PAGE_SIZE);
+
+            var pagedAssessments = manager.GetAll(page: page, pageSize: PAGE_SIZE);
+
             var helper = new UrlHelper(Request);
 
             var links = new List<LinkModel>();
-            if (page > 1)
+            if (page > 1 && (page - 1) < pagedAssessments.TotalPages)
             {
                 links.Add(TheModelFactory.CreateLink(helper.Link("Assessments", new {page = page - 1}), "prevPage"));
             }
 
-            if (page < totalPages)
+            if (page < pagedAssessments.TotalPages)
             {
                 links.Add(TheModelFactory.CreateLink(helper.Link("Assessments", new { page = page + 1 }), "nextPage"));
             }
             
-            var results = UnitOfWork.AssessmentRepository.Get(page: page, pageSize: PAGE_SIZE).ToList().Select(a => TheModelFactory.Create(a));
-
-            return new {
-                TotalCount = totalCount,
-                TotalPages = totalPages,
+            return new PagedModel<AssessmentModel>() {
+                TotalRecords = pagedAssessments.TotalRecords,
+                TotalPages = pagedAssessments.TotalPages,
                 Links = links,
-                Results = results
+                PagedData = pagedAssessments.PagedData.Select(a => TheModelFactory.Create(a)).ToList()
             };
         }
 
         // GET api/assessments/5
         public HttpResponseMessage Get(int id)
         {
-            var model = TheModelFactory.Create(UnitOfWork.AssessmentRepository.GetByID(id));
+            var model = TheModelFactory.Create(manager.Get(id));
             if (model == null)
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
@@ -64,10 +65,8 @@ namespace TestBank.API.WebHost.Controllers
         public HttpResponseMessage Post([FromBody]AssessmentModel model)
         {
             var assessment = Mapper.Map<Assessment>(model);
-            UnitOfWork.AssessmentRepository.Insert(assessment);
-
-            UnitOfWork.Commit();
-
+            assessment = manager.Insert(assessment);
+            
             var newModel = TheModelFactory.Create(assessment);
             var response = Request.CreateResponse(HttpStatusCode.Created, newModel);
             var link = newModel.Links.Where(l => l.Rel == "self").FirstOrDefault();
@@ -80,14 +79,22 @@ namespace TestBank.API.WebHost.Controllers
         }
 
         // PUT api/assessments/5
-        public void Put(int id, [FromBody]AssessmentModel model)
+        [HttpPut]
+        [HttpPatch]
+        public HttpResponseMessage Put(int id, [FromBody]AssessmentModel model)
         {
+            model.Id = id;
+            var assessment = Mapper.Map<Assessment>(model);
+            assessment = manager.Update(assessment);
+
+            return Request.CreateResponse(HttpStatusCode.OK, assessment);
         }
 
         // DELETE api/assessments/5
-        public void Delete(int id)
+        public HttpResponseMessage Delete(int id)
         {
-            
+            manager.Delete(id);
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }
