@@ -8,6 +8,7 @@ using TestBank.Data;
 using TestBank.Entity;
 using AutoMapper;
 using TestBank.API.WebHost.Models;
+using System.Web.Http.Routing;
 
 namespace TestBank.API.WebHost.Controllers
 {
@@ -20,11 +21,32 @@ namespace TestBank.API.WebHost.Controllers
         }
 
         // GET api/assessments
-        public IEnumerable<AssessmentModel> GetAll(int page = 1)
+        public object GetAll(int page = 1)
         {
             if (page < 1) page = 1;
+            var totalCount = UnitOfWork.AssessmentRepository.Get().Count();
+            var totalPages = Math.Ceiling((double) totalCount / PAGE_SIZE);
+            var helper = new UrlHelper(Request);
+
+            var links = new List<LinkModel>();
+            if (page > 1)
+            {
+                links.Add(TheModelFactory.CreateLink(helper.Link("Assessments", new {page = page - 1}), "prevPage"));
+            }
+
+            if (page < totalPages)
+            {
+                links.Add(TheModelFactory.CreateLink(helper.Link("Assessments", new { page = page + 1 }), "nextPage"));
+            }
             
-            return UnitOfWork.AssessmentRepository.Get(page: page, pageSize: PAGE_SIZE).ToList().Select(a => TheModelFactory.Create(a));
+            var results = UnitOfWork.AssessmentRepository.Get(page: page, pageSize: PAGE_SIZE).ToList().Select(a => TheModelFactory.Create(a));
+
+            return new {
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                Links = links,
+                Results = results
+            };
         }
 
         // GET api/assessments/5
