@@ -6,7 +6,7 @@ using System.Data.Entity;
 using TestBank.Entity;
 using TestBank.Data.Mappings;
 
-namespace TestBank.Data
+namespace TestBank.Data.Infrastructure
 {
     public class TestBankContext: DbContext
     {

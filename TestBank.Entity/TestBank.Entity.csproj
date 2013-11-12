@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assessment.cs" />
-    <Compile Include="BaseEntity.cs" />
+    <Compile Include="IEntity.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="PagedEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

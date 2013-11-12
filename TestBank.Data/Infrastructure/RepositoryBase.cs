@@ -6,17 +6,28 @@ using System.Data.Entity;
 using System.Linq.Expressions;
 using TestBank.Entity;
 
-namespace TestBank.Data
+namespace TestBank.Data.Infrastructure
 {
-    public class GenericRepository<TEntity> where TEntity : BaseEntity
+    public abstract class RepositoryBase<TEntity> where TEntity : class, IEntity
     {
-        internal TestBankContext context;
-        internal DbSet<TEntity> dbSet;
+        internal TestBankContext dataContext;
+        internal IDbSet<TEntity> dbSet;
 
-        public GenericRepository(TestBankContext context)
+        public RepositoryBase(IDatabaseFactory databaseFactory)
         {
-            this.context = context;
-            this.dbSet = context.Set<TEntity>();
+            DatabaseFactory = databaseFactory;
+            this.dbSet = DataContext.Set<TEntity>();
+        }
+
+        protected IDatabaseFactory DatabaseFactory
+        {
+            get;
+            private set;
+        }
+
+        protected TestBankContext DataContext
+        {
+            get { return dataContext ?? (dataContext = DatabaseFactory.Get()); }
         }
 
         public virtual IQueryable<TEntity> Get(
@@ -36,12 +47,6 @@ namespace TestBank.Data
                 query = query.Where(filter);
             }
             
-            //foreach (var includeProperty in includeProperties.Split
-            //    (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            //{
-            //    query = query.Include(includeProperty);
-            //}
-
             if (orderBy != null)
             {
                 return orderBy(query);
@@ -82,7 +87,7 @@ namespace TestBank.Data
 
         public virtual void Delete(TEntity entityToDelete)
         {
-            if (context.Entry(entityToDelete).State == EntityState.Detached)
+            if (dataContext.Entry(entityToDelete).State == EntityState.Detached)
             {
                 dbSet.Attach(entityToDelete);
             }
@@ -92,7 +97,7 @@ namespace TestBank.Data
         public virtual void Update(TEntity entityToUpdate)
         {
             dbSet.Attach(entityToUpdate);
-            context.Entry(entityToUpdate).State = EntityState.Modified;
+            dataContext.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }
 }
