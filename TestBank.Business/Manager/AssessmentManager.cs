@@ -12,11 +12,13 @@ namespace TestBank.Business.Manager
     {
         private readonly IUnitOfWork UoW;
         private readonly IAssessmentRepository repository;
+        private readonly IQuestionRepository questionRepository;
 
-        public AssessmentManager(IUnitOfWork unitOfWork, IAssessmentRepository repository)
+        public AssessmentManager(IUnitOfWork unitOfWork, IAssessmentRepository repository, IQuestionRepository questionRepository)
         {
             this.UoW = unitOfWork;
             this.repository = repository;
+            this.questionRepository = questionRepository;
         }
 
         public PagedEntity<Assessment> GetAll(int page = 1, int pageSize = 10)
@@ -43,6 +45,16 @@ namespace TestBank.Business.Manager
         public Assessment Insert(Assessment assessment)
         {
             repository.Insert(assessment);
+
+            ////for test UoW
+            //var question = new Question()
+            //{
+            //    Id = 0,
+            //    Description = "What are the values types?",
+            //    Category = "C#"
+            //};
+
+            //questionRepository.Insert(question);
 
             UoW.Commit();
             return assessment;

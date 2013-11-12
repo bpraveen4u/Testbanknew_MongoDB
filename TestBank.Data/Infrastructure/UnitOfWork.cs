@@ -23,7 +23,7 @@ namespace TestBank.Data.Infrastructure
 
         public void Commit()
         {
-            dataContext.SaveChanges();
+            DataContext.SaveChanges();
         }
     }
 }

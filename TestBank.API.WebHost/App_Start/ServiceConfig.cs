@@ -16,6 +16,7 @@ namespace TestBank.API.WebHost.App_Start
             kernel.Bind<IDatabaseFactory>().To<DatabaseFactory>();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
             kernel.Bind<IAssessmentRepository>().To<AssessmentRepository>();
+            kernel.Bind<IQuestionRepository>().To<QuestionRepository>();
             //kernel.Bind<AssessmentManager>().ToSelf();
         }
     }
