@@ -12,6 +12,11 @@ using TestBank.Business.Manager;
 using System.Net.Http;
 using System.Web.Http.Hosting;
 using System.Web.Http;
+using TestBank.API.WebHost;
+using System.Web.Http.Routing;
+using AutoMapper;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace TestBank.Tests.ApiControllers
 {
@@ -30,7 +35,7 @@ namespace TestBank.Tests.ApiControllers
         public void Get_All_Returns_AllAssessments()
         {
             // Arrange   
-            InitAssessmentCategories(assessmentRepository, page:1, pageSize:3);
+            InitAssessmentCategoriesNew(assessmentRepository);
             assessmentManager = new AssessmentManager(null, assessmentRepository.Object, null);
             
             //// Act
@@ -38,10 +43,107 @@ namespace TestBank.Tests.ApiControllers
             //// Assert
             Assert.IsNotNull(pagedAssessments, "Result is null");
             Assert.IsInstanceOfType(pagedAssessments, typeof(PagedEntity<Assessment>), "Wrong Model");
-            Assert.AreEqual(4, pagedAssessments.PagedData.Count, "Got wrong number of Categories");
+            Assert.AreEqual(4, pagedAssessments.TotalRecords, "Wrong number of record count");
+            Assert.AreEqual(4, pagedAssessments.PagedData.Count, "Got wrong number of Assessments");
         }
 
-        public void InitAssessmentCategories(Mock<IAssessmentRepository> assessmentMock, 
+        [TestMethod]
+        public void Get_All_Returns_AllAssessments_Action()
+        {
+            // Arrange   
+            IQueryable<Assessment> fakeAssessment = GetAssessments();
+            assessmentRepository.Setup(x => x.Get(It.IsAny<Expression<Func<Assessment, bool>>>()
+                ,It.IsAny<Func<IQueryable<Assessment>, IOrderedQueryable<Assessment>>>()
+                , It.IsAny<List<Expression<Func<Assessment, object>>>>(),It.IsAny<int?>(), It.IsAny<int?>())).Returns(fakeAssessment);
+            assessmentManager = new AssessmentManager(null, assessmentRepository.Object, null);
+            var controller = SetupControllerContext(HttpMethod.Get, "http://localhost/api/assessments/");
+
+            //// Act
+            var pagedAssessments = controller.GetAll();
+            //// Assert
+            Assert.IsNotNull(pagedAssessments, "Result is null");
+            Assert.IsInstanceOfType(pagedAssessments, typeof(PagedModel<AssessmentModel>), "Wrong Model");
+            Assert.AreEqual(4, pagedAssessments.TotalRecords, "Wrong number of record count");
+            Assert.AreEqual(4, pagedAssessments.PagedData.Count, "Got wrong number of Assessments");
+        }
+
+        private AssessmentsController SetupControllerContext(HttpMethod method, string url)
+        {
+            Mapper.CreateMap<Assessment, AssessmentModel>();
+            var httpConfiguration = new HttpConfiguration();
+            WebApiConfig.Register(httpConfiguration);
+            var httpRouteData = new HttpRouteData(httpConfiguration.Routes["Assessments"],
+                new HttpRouteValueDictionary { { "controller", "Assessments" } });
+            var controller = new AssessmentsController(assessmentManager)
+            {
+                Request = new HttpRequestMessage(method, url)
+                {
+                    Properties = 
+                {
+                    { HttpPropertyKeys.HttpConfigurationKey, httpConfiguration },
+                    { HttpPropertyKeys.HttpRouteDataKey, httpRouteData } 
+                }
+                }
+            };
+            return controller;
+        }
+
+        [TestMethod]
+        public void Get_One_Assessment()
+        {
+            // Arrange   
+            Assessment fakeAssessment = new Assessment() { Id=1000, Name = "test fake assessment"};
+            assessmentRepository.Setup(x => x.GetByID(1000)).Returns(fakeAssessment);
+
+            assessmentManager = new AssessmentManager(null, assessmentRepository.Object, null);
+
+            //// Act
+            var assessment = assessmentManager.Get(1000);
+            //// Assert
+            Assert.IsNotNull(assessment, "Result is null");
+            Assert.IsInstanceOfType(assessment, typeof(Assessment), "Wrong Model");
+            Assert.AreEqual(1000, assessment.Id, "Got wrong number of Assessments");
+        }
+
+        [TestMethod]
+        public void Get_One_Assessment_Action()
+        {
+            // Arrange   
+            Assessment fakeAssessment = new Assessment() { Id = 1000, Name = "test fake assessment" };
+            assessmentRepository.Setup(x => x.GetByID(1000)).Returns(fakeAssessment);
+
+            assessmentManager = new AssessmentManager(null, assessmentRepository.Object, null);
+            var controller = SetupControllerContext(HttpMethod.Get, "http://localhost/api/assessments/1000");
+            //// Act
+            var response = controller.Get(1000);
+            //// Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            var assessment = JsonConvert.DeserializeObject<AssessmentModel>(response.Content.ReadAsStringAsync().Result);
+            Assert.IsNotNull(assessment, "Result is null");
+            Assert.IsInstanceOfType(assessment, typeof(AssessmentModel), "Wrong Model");
+            Assert.AreEqual(1000, assessment.Id, "Got wrong number of Assessments");
+        }
+
+        //public void InitAssessmentCategories(Mock<IAssessmentRepository> assessmentMock, 
+        //    Expression<Func<Assessment, bool>> filter = null,
+        //    Func<IQueryable<Assessment>, IOrderedQueryable<Assessment>> orderBy = null,
+        //    List<Expression<Func<Assessment, object>>> includeProperties = null,
+        //    int? page = null,
+        //    int? pageSize = null)
+        //{
+        //    IQueryable<Assessment> fakeAssessments = GetAssessments();
+        //    if (filter == null && orderBy == null && includeProperties == null)
+        //    {
+        //        assessmentMock.Setup(mock => mock.Get(filter, orderBy, includeProperties, page, pageSize)).Returns(fakeAssessments);
+        //        //assessmentMock.Setup(mock => mock.Get(filter, orderBy, includeProperties, page, pageSize).Count()).Returns(4);
+        //    }
+        //    else
+        //    {
+                
+        //    }
+        //}
+
+        private void InitAssessmentCategoriesNew(Mock<IAssessmentRepository> assessmentMock,
             Expression<Func<Assessment, bool>> filter = null,
             Func<IQueryable<Assessment>, IOrderedQueryable<Assessment>> orderBy = null,
             List<Expression<Func<Assessment, object>>> includeProperties = null,
@@ -49,15 +151,9 @@ namespace TestBank.Tests.ApiControllers
             int? pageSize = null)
         {
             IQueryable<Assessment> fakeAssessments = GetAssessments();
-            if (filter == null && orderBy == null && includeProperties == null)
-            {
-                assessmentMock.Setup(mock => mock.Get(filter, orderBy, includeProperties, page, pageSize)).Returns(fakeAssessments);
-                //assessmentMock.Setup(mock => mock.Get(filter, orderBy, includeProperties, page, pageSize).Count()).Returns(4);
-            }
-            else
-            {
-                
-            }
+            assessmentRepository.Setup(x => x.Get(It.IsAny<Expression<Func<Assessment, bool>>>()
+                , It.IsAny<Func<IQueryable<Assessment>, IOrderedQueryable<Assessment>>>()
+                , It.IsAny<List<Expression<Func<Assessment, object>>>>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns(fakeAssessments);
         }
 
         private static IQueryable<Assessment> GetAssessments()
