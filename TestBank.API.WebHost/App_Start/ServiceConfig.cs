@@ -6,6 +6,7 @@ using Ninject;
 using TestBank.Data.Infrastructure;
 using TestBank.Business.Manager;
 using TestBank.Data.Repositories;
+using TestBank.API.WebHost.Infrastructure.Logging;
 
 namespace TestBank.API.WebHost.App_Start
 {
@@ -13,6 +14,7 @@ namespace TestBank.API.WebHost.App_Start
     {
         public static void RegisterServices(StandardKernel kernel)
         {
+            kernel.Bind<ILogger>().To<NLogLogger>();
             kernel.Bind<IDatabaseFactory>().To<DatabaseFactory>();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
             kernel.Bind<IAssessmentRepository>().To<AssessmentRepository>();

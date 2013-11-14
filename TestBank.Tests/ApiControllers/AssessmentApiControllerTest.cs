@@ -17,6 +17,10 @@ using System.Web.Http.Routing;
 using AutoMapper;
 using System.Net;
 using Newtonsoft.Json;
+using TestBank.Data.Infrastructure;
+using TestBank.API.WebHost.Infrastructure.Filters;
+using System.Web.Http.Controllers;
+using TestBank.Business.Exceptions;
 
 namespace TestBank.Tests.ApiControllers
 {
@@ -71,6 +75,12 @@ namespace TestBank.Tests.ApiControllers
         {
             Mapper.CreateMap<Assessment, AssessmentModel>();
             var httpConfiguration = new HttpConfiguration();
+            httpConfiguration.Filters.Add(new BusinessExceptionAttribute());
+            
+            //HttpControllerContext controllerContext = ContextUtil.CreateControllerContext(httpConfiguration);
+            //HttpControllerDescriptor controllerDescriptor = ContextUtil.CreateControllerDescriptor(httpConfiguration);
+            //HttpActionDescriptor actionDescriptor = ContextUtil.
+            //HttpActionContext context = ContextUtil.CreateActionContext(controllerContext, controllerDescriptor);
             WebApiConfig.Register(httpConfiguration);
             var httpRouteData = new HttpRouteData(httpConfiguration.Routes["Assessments"],
                 new HttpRouteValueDictionary { { "controller", "Assessments" } });
@@ -79,11 +89,13 @@ namespace TestBank.Tests.ApiControllers
                 Request = new HttpRequestMessage(method, url)
                 {
                     Properties = 
-                {
-                    { HttpPropertyKeys.HttpConfigurationKey, httpConfiguration },
-                    { HttpPropertyKeys.HttpRouteDataKey, httpRouteData } 
+                    {
+                        { HttpPropertyKeys.HttpConfigurationKey, httpConfiguration },
+                        { HttpPropertyKeys.HttpRouteDataKey, httpRouteData } 
+                    }
                 }
-                }
+                , ControllerContext = ContextUtil.CreateControllerContext()
+                
             };
             return controller;
         }
@@ -124,24 +136,48 @@ namespace TestBank.Tests.ApiControllers
             Assert.AreEqual(1000, assessment.Id, "Got wrong number of Assessments");
         }
 
-        //public void InitAssessmentCategories(Mock<IAssessmentRepository> assessmentMock, 
-        //    Expression<Func<Assessment, bool>> filter = null,
-        //    Func<IQueryable<Assessment>, IOrderedQueryable<Assessment>> orderBy = null,
-        //    List<Expression<Func<Assessment, object>>> includeProperties = null,
-        //    int? page = null,
-        //    int? pageSize = null)
-        //{
-        //    IQueryable<Assessment> fakeAssessments = GetAssessments();
-        //    if (filter == null && orderBy == null && includeProperties == null)
-        //    {
-        //        assessmentMock.Setup(mock => mock.Get(filter, orderBy, includeProperties, page, pageSize)).Returns(fakeAssessments);
-        //        //assessmentMock.Setup(mock => mock.Get(filter, orderBy, includeProperties, page, pageSize).Count()).Returns(4);
-        //    }
-        //    else
-        //    {
-                
-        //    }
-        //}
+        [TestMethod]
+        public void Post_Assessment_Action_Returns_CreatedStatusCode()
+        {
+            // Arrange   
+            var fakeUoW = new Mock<IUnitOfWork>();
+            fakeUoW.Setup(u => u.Commit());
+            var fakeAssessmentModel = new AssessmentModel() { Id = 1000, Name = "test fake assessment", Duration = 10 };
+            assessmentRepository.Setup(x => x.Insert(It.IsAny<Assessment>()));
+            assessmentManager = new AssessmentManager(fakeUoW.Object, assessmentRepository.Object, null);
+            var controller = SetupControllerContext(HttpMethod.Post, "http://localhost/api/assessments/");
+            //// Act
+            var response = controller.Post(fakeAssessmentModel);
+
+            //// Assert
+            Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
+            var newAssessment = JsonConvert.DeserializeObject<AssessmentModel>(response.Content.ReadAsStringAsync().Result);
+            Assert.IsNotNull(newAssessment, "Result is null");
+            Assert.AreEqual(string.Format("http://localhost/api/assessments/{0}", newAssessment.Id), response.Headers.Location.ToString());
+        }
+
+        [TestMethod]
+        public void Post_Assessment_Action_Returns_BusinessException()
+        {
+            // Arrange   
+            var fakeUoW = new Mock<IUnitOfWork>();
+            fakeUoW.Setup(u => u.Commit());
+            var fakeAssessmentModel = new AssessmentModel() { Id = 1000, Name = "test fake assessment" };
+            assessmentRepository.Setup(x => x.Insert(It.IsAny<Assessment>()));
+            assessmentManager = new AssessmentManager(fakeUoW.Object, assessmentRepository.Object, null);
+            var controller = SetupControllerContext(HttpMethod.Post, "http://localhost/api/assessments/");
+            
+            //// Acts
+            //ExceptionAssert
+            ExceptionAssert.Throws<BusinessException>(() => { controller.Post(fakeAssessmentModel); }, "BusinessException was not thrown.");
+            //var response = controller.Post(fakeAssessmentModel);
+            //// Assert
+            //Assert.AreEqual(HttpStatusCode.InternalServerError, response.StatusCode);
+            //var newAssessment = JsonConvert.DeserializeObject<AssessmentModel>(response.Content.ReadAsStringAsync().Result);
+            //Assert.IsNotNull(newAssessment, "Result is null");
+            //Assert.AreEqual(string.Format("http://localhost/api/assessments/{0}", newAssessment.Id), response.Headers.Location.ToString());
+        }
+        
 
         private void InitAssessmentCategoriesNew(Mock<IAssessmentRepository> assessmentMock,
             Expression<Func<Assessment, bool>> filter = null,

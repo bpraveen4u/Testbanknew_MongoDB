@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TestBank.Business.Exceptions;
+using TestBank.Business.Manager.Validator;
 using TestBank.Data.Infrastructure;
 using TestBank.Data.Repositories;
 using TestBank.Entity;
@@ -44,20 +46,20 @@ namespace TestBank.Business.Manager
 
         public Assessment Insert(Assessment assessment)
         {
-            repository.Insert(assessment);
+            AssessmentValidator validator = new AssessmentValidator();
+            var results = validator.Validate(assessment);
+            if (results.IsValid)
+            {
+                repository.Insert(assessment);
 
-            ////for test UoW
-            //var question = new Question()
-            //{
-            //    Id = 0,
-            //    Description = "What are the values types?",
-            //    Category = "C#"
-            //};
-
-            //questionRepository.Insert(question);
-
-            UoW.Commit();
-            return assessment;
+                UoW.Commit();
+                return assessment;
+            }
+            else
+            {
+                var errors = results.Errors.Select(e => e.ErrorMessage).ToList();
+                throw new BusinessException(errors);
+            }
         }
 
         public Assessment Update(Assessment assessment)

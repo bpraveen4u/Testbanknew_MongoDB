@@ -6,7 +6,7 @@ using System.Web.Http;
 using TestBank.API.WebHost.Infrastructure.DI;
 using Ninject;
 using TestBank.API.WebHost.App_Start;
-using TestBank.API.WebHost.Filters;
+using TestBank.API.WebHost.Infrastructure.Filters;
 
 namespace TestBank.API.WebHost
 {
@@ -20,10 +20,13 @@ namespace TestBank.API.WebHost
             //AreaRegistration.RegisterAllAreas();
             
             WebApiConfig.Register(GlobalConfiguration.Configuration);
+            GlobalConfiguration.Configuration.Filters.Add(new BusinessExceptionAttribute());
             CreateKernel(GlobalConfiguration.Configuration);
             //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             //RouteConfig.RegisterRoutes(RouteTable.Routes);
             //BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            
 
             //Message Handlers
 #if !DEBUG

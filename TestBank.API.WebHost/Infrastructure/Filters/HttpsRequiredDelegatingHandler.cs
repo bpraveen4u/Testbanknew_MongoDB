@@ -7,7 +7,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace TestBank.API.WebHost.Filters
+namespace TestBank.API.WebHost.Infrastructure.Filters
 {
     public class HttpsRequiredDelegatingHandler : DelegatingHandler
     {
