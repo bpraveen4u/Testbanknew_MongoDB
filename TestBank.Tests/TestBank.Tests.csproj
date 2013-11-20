@@ -78,8 +78,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ApiControllers\AssessmentApiControllerTest.cs" />
+    <Compile Include="Managers\AssessmentManagerTest.cs" />
     <Compile Include="ContextUtil.cs" />
     <Compile Include="ExceptionAssert.cs" />
+    <Compile Include="Managers\QuestionManagerTest.cs" />
     <Compile Include="MockHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

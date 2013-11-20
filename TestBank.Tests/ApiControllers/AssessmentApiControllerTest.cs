@@ -29,26 +29,13 @@ namespace TestBank.Tests.ApiControllers
     {
         private Mock<IAssessmentRepository> assessmentRepository;
         private AssessmentManager assessmentManager;
+        private Mock<IUnitOfWork> fakeUoW;
         [TestInitialize]
         public void Setup()
         {
             assessmentRepository = new Mock<IAssessmentRepository>();
-        }
-
-        [TestMethod]
-        public void Get_All_Returns_AllAssessments()
-        {
-            // Arrange   
-            InitAssessmentCategoriesNew(assessmentRepository);
-            assessmentManager = new AssessmentManager(null, assessmentRepository.Object, null);
-            
-            //// Act
-            var pagedAssessments = assessmentManager.GetAll(page:1, pageSize:3);
-            //// Assert
-            Assert.IsNotNull(pagedAssessments, "Result is null");
-            Assert.IsInstanceOfType(pagedAssessments, typeof(PagedEntity<Assessment>), "Wrong Model");
-            Assert.AreEqual(4, pagedAssessments.TotalRecords, "Wrong number of record count");
-            Assert.AreEqual(4, pagedAssessments.PagedData.Count, "Got wrong number of Assessments");
+            fakeUoW = new Mock<IUnitOfWork>();
+            fakeUoW.Setup(u => u.Commit());
         }
 
         [TestMethod]
@@ -59,7 +46,7 @@ namespace TestBank.Tests.ApiControllers
             assessmentRepository.Setup(x => x.Get(It.IsAny<Expression<Func<Assessment, bool>>>()
                 ,It.IsAny<Func<IQueryable<Assessment>, IOrderedQueryable<Assessment>>>()
                 , It.IsAny<List<Expression<Func<Assessment, object>>>>(),It.IsAny<int?>(), It.IsAny<int?>())).Returns(fakeAssessment);
-            assessmentManager = new AssessmentManager(null, assessmentRepository.Object, null);
+            assessmentManager = new AssessmentManager(fakeUoW.Object, assessmentRepository.Object, null);
             var controller = SetupControllerContext(HttpMethod.Get, "http://localhost/api/assessments/");
 
             //// Act
@@ -99,24 +86,7 @@ namespace TestBank.Tests.ApiControllers
             };
             return controller;
         }
-
-        [TestMethod]
-        public void Get_One_Assessment()
-        {
-            // Arrange   
-            Assessment fakeAssessment = new Assessment() { Id=1000, Name = "test fake assessment"};
-            assessmentRepository.Setup(x => x.GetByID(1000)).Returns(fakeAssessment);
-
-            assessmentManager = new AssessmentManager(null, assessmentRepository.Object, null);
-
-            //// Act
-            var assessment = assessmentManager.Get(1000);
-            //// Assert
-            Assert.IsNotNull(assessment, "Result is null");
-            Assert.IsInstanceOfType(assessment, typeof(Assessment), "Wrong Model");
-            Assert.AreEqual(1000, assessment.Id, "Got wrong number of Assessments");
-        }
-
+        
         [TestMethod]
         public void Get_One_Assessment_Action()
         {
@@ -124,7 +94,7 @@ namespace TestBank.Tests.ApiControllers
             Assessment fakeAssessment = new Assessment() { Id = 1000, Name = "test fake assessment" };
             assessmentRepository.Setup(x => x.GetByID(1000)).Returns(fakeAssessment);
 
-            assessmentManager = new AssessmentManager(null, assessmentRepository.Object, null);
+            assessmentManager = new AssessmentManager(fakeUoW.Object, assessmentRepository.Object, null);
             var controller = SetupControllerContext(HttpMethod.Get, "http://localhost/api/assessments/1000");
             //// Act
             var response = controller.Get(1000);
@@ -140,8 +110,6 @@ namespace TestBank.Tests.ApiControllers
         public void Post_Assessment_Action_Returns_CreatedStatusCode()
         {
             // Arrange   
-            var fakeUoW = new Mock<IUnitOfWork>();
-            fakeUoW.Setup(u => u.Commit());
             var fakeAssessmentModel = new AssessmentModel() { Id = 1000, Name = "test fake assessment", Duration = 10 };
             assessmentRepository.Setup(x => x.Insert(It.IsAny<Assessment>()));
             assessmentManager = new AssessmentManager(fakeUoW.Object, assessmentRepository.Object, null);
@@ -160,8 +128,6 @@ namespace TestBank.Tests.ApiControllers
         public void Post_Assessment_Action_Returns_BusinessException()
         {
             // Arrange   
-            var fakeUoW = new Mock<IUnitOfWork>();
-            fakeUoW.Setup(u => u.Commit());
             var fakeAssessmentModel = new AssessmentModel() { Id = 1000, Name = "test fake assessment" };
             assessmentRepository.Setup(x => x.Insert(It.IsAny<Assessment>()));
             assessmentManager = new AssessmentManager(fakeUoW.Object, assessmentRepository.Object, null);
@@ -170,12 +136,40 @@ namespace TestBank.Tests.ApiControllers
             //// Acts
             //ExceptionAssert
             ExceptionAssert.Throws<BusinessException>(() => { controller.Post(fakeAssessmentModel); }, "BusinessException was not thrown.");
-            //var response = controller.Post(fakeAssessmentModel);
             //// Assert
-            //Assert.AreEqual(HttpStatusCode.InternalServerError, response.StatusCode);
-            //var newAssessment = JsonConvert.DeserializeObject<AssessmentModel>(response.Content.ReadAsStringAsync().Result);
-            //Assert.IsNotNull(newAssessment, "Result is null");
-            //Assert.AreEqual(string.Format("http://localhost/api/assessments/{0}", newAssessment.Id), response.Headers.Location.ToString());
+        }
+
+        [TestMethod]
+        public void Put_Assessment_Returns_OKStatusCode()
+        {
+            // Arrange  
+            var fakeAssessmentModel = new AssessmentModel() { Id = 1000, Name = "test fake assessment", Duration = 5 };
+            assessmentRepository.Setup(x => x.Update(It.IsAny<Assessment>()));
+            assessmentManager = new AssessmentManager(fakeUoW.Object, assessmentRepository.Object, null);
+            var controller = SetupControllerContext(HttpMethod.Put, string.Format("http://localhost/api/assessments/{0}", fakeAssessmentModel.Id));
+
+            // Act
+            var response = controller.Put(fakeAssessmentModel.Id, fakeAssessmentModel);
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void Delete_Assessment_Returns_NoContentStatusCode()
+        {
+            // Arrange         
+            var fakeUoW = new Mock<IUnitOfWork>();
+            fakeUoW.Setup(u => u.Commit());
+            var fakeAssessmentModel = new AssessmentModel() { Id = 1000, Name = "test fake assessment", Duration = 5 };
+            assessmentRepository.Setup(x => x.Delete(It.IsAny<Assessment>()));
+            assessmentManager = new AssessmentManager(fakeUoW.Object, assessmentRepository.Object, null);
+            var controller = SetupControllerContext(HttpMethod.Delete, string.Format("http://localhost/api/assessments/{0}", fakeAssessmentModel.Id));
+
+            // Act          
+            var response = controller.Delete(1000);
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NoContent, response.StatusCode);
+
         }
         
 
@@ -195,10 +189,10 @@ namespace TestBank.Tests.ApiControllers
         private static IQueryable<Assessment> GetAssessments()
         {
             IQueryable<Assessment> fakeAssessments = new List<Assessment> {
-                new Assessment {Id=1, Name = "Test1", Description="Test1Desc", Duration=10},
-                new Assessment {Id=2, Name = "Test2", Description="Test2Desc",Duration=20},
-                new Assessment { Id=3, Name = "Test3", Description="Test3Desc",Duration=30}, 
-                new Assessment { Id=4, Name = "Test3", Description="Test3Desc",Duration=30}
+                new Assessment { Id=1, Name = "Test1", Description="Test1Desc", Duration=10},
+                new Assessment { Id=2, Name = "Test2", Description="Test2Desc", Duration=20},
+                new Assessment { Id=3, Name = "Test3", Description="Test3Desc", Duration=30}, 
+                new Assessment { Id=4, Name = "Test3", Description="Test3Desc", Duration=30}
                 }.AsQueryable();
             return fakeAssessments;
         }

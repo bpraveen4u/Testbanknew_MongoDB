@@ -52,7 +52,9 @@
   <ItemGroup>
     <Compile Include="Exceptions\BusinessException.cs" />
     <Compile Include="Manager\AssessmentManager.cs" />
+    <Compile Include="Manager\QuestionManager.cs" />
     <Compile Include="Manager\Validator\AssessmentValidator.cs" />
+    <Compile Include="Manager\Validator\QuestionValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

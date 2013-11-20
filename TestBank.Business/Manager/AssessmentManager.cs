@@ -64,10 +64,21 @@ namespace TestBank.Business.Manager
 
         public Assessment Update(Assessment assessment)
         {
-            repository.Update(assessment);
+            AssessmentValidator validator = new AssessmentValidator();
+            var results = validator.Validate(assessment);
+            if (results.IsValid)
+            {
+                repository.Update(assessment);
 
-            UoW.Commit();
-            return assessment;
+                UoW.Commit();
+                return assessment;
+            }
+            else
+            {
+                var errors = results.Errors.Select(e => e.ErrorMessage).ToList();
+                throw new BusinessException(errors);
+            }
+            
         }
 
         public Assessment Get(int id)

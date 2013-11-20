@@ -94,7 +94,7 @@ namespace TestBank.API.WebHost.Controllers
         public HttpResponseMessage Delete(int id)
         {
             manager.Delete(id);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return Request.CreateResponse(HttpStatusCode.NoContent);
         }
     }
 }
