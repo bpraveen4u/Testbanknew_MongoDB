@@ -17,8 +17,10 @@ namespace TestBank.API.WebHost.App_Start
             kernel.Bind<ILogger>().To<NLogLogger>();
             kernel.Bind<IDatabaseFactory>().To<DatabaseFactory>();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
-            kernel.Bind<IAssessmentRepository>().To<AssessmentRepository>();
-            kernel.Bind<IQuestionRepository>().To<QuestionRepository>();
+            //kernel.Bind<IAssessmentRepository>().To<AssessmentRepository>();
+            //kernel.Bind<IQuestionRepository>().To<QuestionRepository>();
+            kernel.Bind<IAssessmentRepository>().To<AssessmentMongoRepository>();
+            kernel.Bind<IQuestionRepository>().To<QuestionMongoRepository>();
             //kernel.Bind<AssessmentManager>().ToSelf();
         }
     }

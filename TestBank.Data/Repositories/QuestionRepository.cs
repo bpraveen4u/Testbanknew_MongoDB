@@ -7,7 +7,7 @@ using TestBank.Data.Infrastructure;
 
 namespace TestBank.Data.Repositories
 {
-    public class QuestionRepository : RepositoryBase<Question>, IQuestionRepository
+    public class QuestionRepository : RepositoryBase<Question, int>, IQuestionRepository
     {
         public QuestionRepository(IDatabaseFactory databaseFactory)
             : base(databaseFactory)
@@ -16,7 +16,7 @@ namespace TestBank.Data.Repositories
         }
     }
 
-    public interface IQuestionRepository : IRepository<Question>
+    public interface IQuestionRepository : IRepository<Question, int>
     {
 
     }

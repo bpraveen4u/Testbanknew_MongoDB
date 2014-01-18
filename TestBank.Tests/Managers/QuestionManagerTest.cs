@@ -9,6 +9,10 @@ using System.Linq.Expressions;
 using TestBank.Entity;
 using TestBank.Business.Manager;
 using TestBank.Data.Infrastructure;
+using ExpectedObjects;
+using ExpectedObjects.Comparisons;
+using ExpectedObjects.Strategies;
+//using Machine.Specifications;
 
 namespace TestBank.Tests.Managers
 {
@@ -100,5 +104,23 @@ namespace TestBank.Tests.Managers
                 }.AsQueryable();
             return fakeQuestions;
         }
+
     }
+
+    //public class when_the_customer_requests_product_information
+    //{
+        
+    //    Establish context = () =>
+    //    {
+    //        _mockedRepository = new Mock<IRepository>();
+    //        _accountCreator = new AccountCreator(_mockedRepository.Object);
+
+    //        _newAccount = new NewAccount();
+    //        _account = new Account();
+
+    //        _mockedRepository
+    //            .Setup(x => x.Create(Moq.It.IsAny<Account>()))
+    //            .Returns(_account);
+    //    };
+    //}
 }

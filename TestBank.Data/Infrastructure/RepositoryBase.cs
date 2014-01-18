@@ -8,7 +8,7 @@ using TestBank.Entity;
 
 namespace TestBank.Data.Infrastructure
 {
-    public abstract class RepositoryBase<TEntity> where TEntity : class, IEntity
+    public abstract class RepositoryBase<TEntity, TKey> where TEntity : class, IEntity<TKey>
     {
         internal TestBankContext dataContext;
         internal IDbSet<TEntity> dbSet;
@@ -69,7 +69,7 @@ namespace TestBank.Data.Infrastructure
             return query;
         }
 
-        public virtual TEntity GetByID(object id)
+        public virtual TEntity GetByID(TKey id)
         {
             return dbSet.Find(id);
         }
@@ -79,7 +79,7 @@ namespace TestBank.Data.Infrastructure
             dbSet.Add(entity);
         }
 
-        public virtual void Delete(object id)
+        public virtual void Delete(TKey id)
         {
             TEntity entityToDelete = dbSet.Find(id);
             Delete(entityToDelete);
