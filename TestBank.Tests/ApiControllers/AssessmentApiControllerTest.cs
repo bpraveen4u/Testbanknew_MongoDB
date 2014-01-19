@@ -110,7 +110,7 @@ namespace TestBank.Tests.ApiControllers
         public void Post_Assessment_Action_Returns_CreatedStatusCode()
         {
             // Arrange   
-            var fakeAssessmentModel = new AssessmentModel() { Id = 1000, Name = "test fake assessment", Duration = 10 };
+            var fakeAssessmentModel = new AssessmentDetailsModel() { Id = 1000, Name = "test fake assessment", Duration = 10 };
             assessmentRepository.Setup(x => x.Insert(It.IsAny<Assessment>()));
             assessmentManager = new AssessmentManager(fakeUoW.Object, assessmentRepository.Object, null);
             var controller = SetupControllerContext(HttpMethod.Post, "http://localhost/api/assessments/");
@@ -128,7 +128,7 @@ namespace TestBank.Tests.ApiControllers
         public void Post_Assessment_Action_Returns_BusinessException()
         {
             // Arrange   
-            var fakeAssessmentModel = new AssessmentModel() { Id = 1000, Name = "test fake assessment" };
+            var fakeAssessmentModel = new AssessmentDetailsModel() { Id = 1000, Name = "test fake assessment" };
             assessmentRepository.Setup(x => x.Insert(It.IsAny<Assessment>()));
             assessmentManager = new AssessmentManager(fakeUoW.Object, assessmentRepository.Object, null);
             var controller = SetupControllerContext(HttpMethod.Post, "http://localhost/api/assessments/");

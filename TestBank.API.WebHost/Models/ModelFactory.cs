@@ -34,6 +34,20 @@ namespace TestBank.API.WebHost.Models
             return testModel;
         }
 
+        public AssessmentDetailsModel CreateDetails(Assessment assessment)
+        {
+            if (assessment == null)
+            {
+                return null;
+            }
+            var testModel = Mapper.Map<AssessmentDetailsModel>(assessment);
+            testModel.Links = new List<LinkModel>()
+                {
+                    CreateLink(urlHelper.Link("Assessments", new { Id = assessment.Id }), "self")
+                };
+            return testModel;
+        }
+
         public LinkModel CreateLink(string href, string rel, string method = "GET", bool isTemplated = false)
         {
             return new LinkModel()

@@ -50,9 +50,10 @@ namespace TestBank.Business.Manager
             var results = validator.Validate(assessment);
             if (results.IsValid)
             {
+                assessment.CreatedDate = assessment.ModifiedDate = DateTime.UtcNow;
                 repository.Insert(assessment);
 
-                UoW.Commit();
+                //UoW.Commit();
                 return assessment;
             }
             else

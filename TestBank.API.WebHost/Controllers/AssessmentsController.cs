@@ -53,7 +53,7 @@ namespace TestBank.API.WebHost.Controllers
         // GET api/assessments/5
         public HttpResponseMessage Get(int id)
         {
-            var model = TheModelFactory.Create(manager.Get(id));
+            var model = TheModelFactory.CreateDetails(manager.Get(id));
             if (model == null)
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
@@ -62,12 +62,14 @@ namespace TestBank.API.WebHost.Controllers
         }
 
         // POST api/assessments
-        public HttpResponseMessage Post([FromBody]AssessmentModel model)
+        public HttpResponseMessage Post([FromBody]AssessmentDetailsModel model)
         {
+            Mapper.AssertConfigurationIsValid();
             var assessment = Mapper.Map<Assessment>(model);
+            //assessment.Questions = model.Questions.Select(q => q.Id).ToArray();
             assessment = manager.Insert(assessment);
             
-            var newModel = TheModelFactory.Create(assessment);
+            var newModel = TheModelFactory.CreateDetails(assessment);
             var response = Request.CreateResponse(HttpStatusCode.Created, newModel);
             var link = newModel.Links.Where(l => l.Rel == "self").FirstOrDefault();
             if (link != null)
