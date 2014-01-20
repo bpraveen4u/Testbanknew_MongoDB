@@ -88,6 +88,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AssessmentsController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
+    <Compile Include="Controllers\QuestionsController.cs" />
+    <Compile Include="Infrastructure\AutoMapper\Profiles\QuestionModelMapperProfile.cs" />
     <Compile Include="Infrastructure\Filters\BusinessExceptionAttribute.cs" />
     <Compile Include="Infrastructure\Filters\HttpsRequiredDelegatingHandler.cs" />
     <Compile Include="Formatters\CustomXmlFormatter.cs" />
@@ -95,7 +97,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\AutoMapper\AutoMapperConfiguration.cs" />
-    <Compile Include="Infrastructure\AutoMapper\Profiles\TestModelMapperProfile.cs" />
+    <Compile Include="Infrastructure\AutoMapper\Profiles\AssessmentModelMapperProfile.cs" />
     <Compile Include="Infrastructure\Converters\LinkModelConverter.cs" />
     <Compile Include="Infrastructure\DI\NinjectResolver.cs" />
     <Compile Include="Infrastructure\DI\NinjectScope.cs" />

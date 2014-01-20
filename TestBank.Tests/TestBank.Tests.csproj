@@ -89,6 +89,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ApiControllers\AssessmentApiControllerTest.cs" />
+    <Compile Include="ApiControllers\QuestionApiControllerTest.cs" />
     <Compile Include="Managers\AssessmentManagerTest.cs" />
     <Compile Include="ContextUtil.cs" />
     <Compile Include="ExceptionAssert.cs" />

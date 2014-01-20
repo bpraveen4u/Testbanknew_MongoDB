@@ -63,6 +63,9 @@
     <Compile Include="Infrastructure\IRepository.cs" />
     <Compile Include="Infrastructure\IUnitOfWork.cs" />
     <Compile Include="Mappings\AssessmentMap.cs" />
+    <Compile Include="MongoDB\EntityBsonClassMap.cs" />
+    <Compile Include="MongoDB\Int32IdGenerator.cs" />
+    <Compile Include="MongoDB\IntIdGeneratorBase.cs" />
     <Compile Include="MongoDB\MongoRepositoryBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrastructure\TestBankContext.cs" />

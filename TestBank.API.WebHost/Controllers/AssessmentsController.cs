@@ -16,10 +16,12 @@ namespace TestBank.API.WebHost.Controllers
     public class AssessmentsController : BaseApiController
     {
         private readonly AssessmentManager manager;
+        private readonly QuestionManager questionManager;
         const int PAGE_SIZE = 2;
-        public AssessmentsController(AssessmentManager manager)
+        public AssessmentsController(AssessmentManager manager, QuestionManager questionManager)
         {
             this.manager = manager;
+            this.questionManager = questionManager;
         }
 
         // GET api/assessments
@@ -53,18 +55,90 @@ namespace TestBank.API.WebHost.Controllers
         // GET api/assessments/5
         public HttpResponseMessage Get(int id)
         {
-            var model = TheModelFactory.CreateDetails(manager.Get(id));
-            if (model == null)
+            var assessment = manager.Get(id);
+
+            if (assessment == null)
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
+
+            var model = TheModelFactory.CreateDetails(assessment);
+
+            if (assessment.Questions != null && assessment.Questions.Length > 0)
+            {
+                model.Questions = new List<QuestionModel>();
+                foreach (var qId in assessment.Questions)
+                {
+                    var question = questionManager.Get(qId);
+                    if (question != null)
+                    {
+                        model.Questions.Add(TheModelFactory.CreateDetails(question, id, "AssessmentQuestions"));
+                    }
+                }
+            }
+           
             return Request.CreateResponse(HttpStatusCode.OK, model);
+        }
+
+        // GET api/assessments/5/questions
+        public HttpResponseMessage GetAssessmentQuestions(int assessmentId)
+        {
+            var assessment = manager.Get(assessmentId);
+
+            if (assessment == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+            var model = TheModelFactory.CreateDetails(assessment);
+
+            var questions = new List<QuestionModel>();
+            if (assessment.Questions != null && assessment.Questions.Length > 0)
+            {
+                foreach (var qId in assessment.Questions)
+                {
+                    var question = questionManager.Get(qId);
+                    if (question != null)
+                    {
+                        questions.Add(TheModelFactory.CreateDetails(question, assessmentId, "AssessmentQuestions"));
+                    }
+                }
+
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, questions);
+        }
+
+        // GET api/assessments/5
+        public HttpResponseMessage GetAssessmentQuestions(int assessmentId, int id)
+        {
+            var assessment = manager.Get(assessmentId);
+
+            if (assessment == null || assessment.Questions == null || !assessment.Questions.Contains(id))
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+            var model = TheModelFactory.CreateDetails(assessment);
+
+            if (assessment.Questions != null && assessment.Questions.Length > 0)
+            {
+                var question = questionManager.Get(id);
+                if (null == question)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound);
+                }
+
+                return Request.CreateResponse(HttpStatusCode.OK, TheModelFactory.CreateDetails(question, assessmentId, "AssessmentQuestions"));
+            }
+
+            return Request.CreateResponse(HttpStatusCode.NotFound);
         }
 
         // POST api/assessments
         public HttpResponseMessage Post([FromBody]AssessmentDetailsModel model)
         {
-            Mapper.AssertConfigurationIsValid();
+            //Mapper.AssertConfigurationIsValid();
             var assessment = Mapper.Map<Assessment>(model);
             //assessment.Questions = model.Questions.Select(q => q.Id).ToArray();
             assessment = manager.Insert(assessment);
@@ -83,13 +157,22 @@ namespace TestBank.API.WebHost.Controllers
         // PUT api/assessments/5
         [HttpPut]
         [HttpPatch]
-        public HttpResponseMessage Put(int id, [FromBody]AssessmentModel model)
+        public HttpResponseMessage Put(int id, [FromBody]AssessmentDetailsModel model)
         {
             model.Id = id;
+            var originalAssessment = manager.Get(id);
+            if (originalAssessment == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+            
             var assessment = Mapper.Map<Assessment>(model);
+            assessment.CreatedDate = originalAssessment.CreatedDate;
+            assessment.CreatedUser = originalAssessment.CreatedUser;
             assessment = manager.Update(assessment);
+            //var model = TheModelFactory.CreateDetails(manager.Get(id));
 
-            return Request.CreateResponse(HttpStatusCode.OK, assessment);
+            return Request.CreateResponse(HttpStatusCode.OK, TheModelFactory.CreateDetails(manager.Get(id)));
         }
 
         // DELETE api/assessments/5

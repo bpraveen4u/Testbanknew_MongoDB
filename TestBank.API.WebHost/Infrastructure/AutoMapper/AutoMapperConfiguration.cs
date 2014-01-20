@@ -11,8 +11,8 @@ namespace TestBank.API.WebHost.Infrastructure.AutoMapper
     {
         public static void Configure()
         {
-            Mapper.AddProfile(new TestModelMapperProfile());
-            Mapper.AddProfile(new TestModelReverseMapperProfile());
+            Mapper.AddProfile(new AssessmentModelMapperProfile());
+            Mapper.AddProfile(new QuestionModelMapperProfile());
         }
     }
 }

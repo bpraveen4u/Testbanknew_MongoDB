@@ -2,12 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using TestBank.Entity;
 
 namespace TestBank.API.WebHost.Models
 {
     public class QuestionModel
     {
+        public ICollection<LinkModel> Links { get; set; }
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Category { get; set; }
+        public string ModifiedUser { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public int Sort { get; set; }
+    }
+
+    public class QuestionDetailsModel : QuestionModel
+    {
+        public List<Option> Options { get; set; }
+        
+        public string InstructorRemarks { get; set; }
+        public byte Weightage { get; set; }
+        public float CorrectScore { get; set; }
+        public float WrongScore { get; set; }
+
+        public string CreatedUser { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

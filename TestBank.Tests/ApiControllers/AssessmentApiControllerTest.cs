@@ -64,10 +64,6 @@ namespace TestBank.Tests.ApiControllers
             var httpConfiguration = new HttpConfiguration();
             httpConfiguration.Filters.Add(new BusinessExceptionAttribute());
             
-            //HttpControllerContext controllerContext = ContextUtil.CreateControllerContext(httpConfiguration);
-            //HttpControllerDescriptor controllerDescriptor = ContextUtil.CreateControllerDescriptor(httpConfiguration);
-            //HttpActionDescriptor actionDescriptor = ContextUtil.
-            //HttpActionContext context = ContextUtil.CreateActionContext(controllerContext, controllerDescriptor);
             WebApiConfig.Register(httpConfiguration);
             var httpRouteData = new HttpRouteData(httpConfiguration.Routes["Assessments"],
                 new HttpRouteValueDictionary { { "controller", "Assessments" } });
@@ -143,8 +139,11 @@ namespace TestBank.Tests.ApiControllers
         public void Put_Assessment_Returns_OKStatusCode()
         {
             // Arrange  
-            var fakeAssessmentModel = new AssessmentModel() { Id = 1000, Name = "test fake assessment", Duration = 5 };
+            Assessment fakeAssessment = new Assessment() { Id = 1000, Name = "test fake assessment" };
+            
+            var fakeAssessmentModel = new AssessmentDetailsModel() { Id = 1000, Name = "test fake assessment", Duration = 5 };
             assessmentRepository.Setup(x => x.Update(It.IsAny<Assessment>()));
+            assessmentRepository.Setup(x => x.GetByID(1000)).Returns(fakeAssessment);
             assessmentManager = new AssessmentManager(fakeUoW.Object, assessmentRepository.Object, null);
             var controller = SetupControllerContext(HttpMethod.Put, string.Format("http://localhost/api/assessments/{0}", fakeAssessmentModel.Id));
 
@@ -152,6 +151,24 @@ namespace TestBank.Tests.ApiControllers
             var response = controller.Put(fakeAssessmentModel.Id, fakeAssessmentModel);
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void Put_Assessment_Returns_OKNotFoundCode()
+        {
+            // Arrange  
+            Assessment fakeAssessment = new Assessment() { Id = 1001, Name = "test fake assessment" };
+
+            var fakeAssessmentModel = new AssessmentDetailsModel() { Id = 1000, Name = "test fake assessment", Duration = 5 };
+            assessmentRepository.Setup(x => x.Update(It.IsAny<Assessment>()));
+            assessmentRepository.Setup(x => x.GetByID(1001)).Returns(fakeAssessment);
+            assessmentManager = new AssessmentManager(fakeUoW.Object, assessmentRepository.Object, null);
+            var controller = SetupControllerContext(HttpMethod.Put, string.Format("http://localhost/api/assessments/{0}", fakeAssessmentModel.Id));
+
+            // Act
+            var response = controller.Put(fakeAssessmentModel.Id, fakeAssessmentModel);
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [TestMethod]

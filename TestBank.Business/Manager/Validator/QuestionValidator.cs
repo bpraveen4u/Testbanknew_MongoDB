@@ -11,7 +11,7 @@ namespace TestBank.Business.Manager.Validator
     {
         public QuestionValidator()
         {
-            RuleFor(q => q.Description).NotEmpty().WithMessage("Question Name is required.");
+            RuleFor(q => q.Description).NotEmpty().WithMessage("Question Description is required.");
             RuleFor(q => q.Category).NotEmpty().WithMessage("Question Category is required.");
         }
     }

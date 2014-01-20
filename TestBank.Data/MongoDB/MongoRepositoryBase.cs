@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
@@ -26,6 +27,11 @@ namespace TestBank.Data.MongoDB
         public MongoRepositoryBase()
             : this(Util<TKey>.GetDefaultConnectionString())
         {
+            var conventionPack = new ConventionPack();
+            conventionPack.Add(new CamelCaseElementNameConvention());
+            ConventionRegistry.Register("My Custom Camelcae convention", conventionPack, t => t.FullName.StartsWith("TestBank.Entity"));
+
+            EntityBsonClassMap.Register();
         }
 
         /// <summary>

@@ -69,9 +69,10 @@ namespace TestBank.Business.Manager
             var results = validator.Validate(assessment);
             if (results.IsValid)
             {
+                assessment.ModifiedDate = DateTime.UtcNow;
                 repository.Update(assessment);
 
-                UoW.Commit();
+                //UoW.Commit();
                 return assessment;
             }
             else
@@ -90,7 +91,7 @@ namespace TestBank.Business.Manager
         public void Delete(int id)
         {
             repository.Delete(id);
-            UoW.Commit();
+            //UoW.Commit();
         }
     }
 }

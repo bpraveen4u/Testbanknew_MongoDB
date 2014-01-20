@@ -45,8 +45,49 @@ namespace TestBank.API.WebHost.Models
                 {
                     CreateLink(urlHelper.Link("Assessments", new { Id = assessment.Id }), "self")
                 };
+
             return testModel;
         }
+
+        public QuestionModel Create(Question question)
+        {
+            if (question == null)
+            {
+                return null;
+            }
+            var questionModel = Mapper.Map<QuestionModel>(question);
+            questionModel.Links = new List<LinkModel>()
+                {
+                    CreateLink(urlHelper.Link("Questions", new { Id = question.Id }), "self")
+                };
+            return questionModel;
+        }
+
+        public QuestionDetailsModel CreateDetails(Question question, int assessmentId = 0, string routeTemplate = null)
+        {
+            if (question == null)
+            {
+                return null;
+            }
+            var questionModel = Mapper.Map<QuestionDetailsModel>(question);
+            if (routeTemplate == null || routeTemplate.Equals("Questions", StringComparison.InvariantCultureIgnoreCase))
+            {
+                questionModel.Links = new List<LinkModel>()
+                {
+                    CreateLink(urlHelper.Link("Questions", new { Id = question.Id }), "self")
+                };
+            }
+            else if (routeTemplate.Equals("AssessmentQuestions", StringComparison.InvariantCultureIgnoreCase))
+            {
+                questionModel.Links = new List<LinkModel>()
+                {
+                    CreateLink(urlHelper.Link("AssessmentQuestions", new { Id = question.Id, assessmentId = assessmentId }), "self")
+                };
+            }
+            
+            return questionModel;
+        }
+
 
         public LinkModel CreateLink(string href, string rel, string method = "GET", bool isTemplated = false)
         {

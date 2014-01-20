@@ -53,9 +53,10 @@ namespace TestBank.Business.Manager
             var results = validator.Validate(question);
             if (results.IsValid)
             {
+                question.CreatedDate = question.ModifiedDate = DateTime.UtcNow;
                 repository.Insert(question);
 
-                UoW.Commit();
+                //UoW.Commit();
                 return question;
             }
             else
@@ -65,5 +66,30 @@ namespace TestBank.Business.Manager
             }
         }
 
+        public Question Update(Question question)
+        {
+            QuestionValidator validator = new QuestionValidator();
+            var results = validator.Validate(question);
+            if (results.IsValid)
+            {
+                question.ModifiedDate = DateTime.UtcNow;
+                repository.Update(question);
+
+                //UoW.Commit();
+                return question;
+            }
+            else
+            {
+                var errors = results.Errors.Select(e => e.ErrorMessage).ToList();
+                throw new BusinessException(errors);
+            }
+
+        }
+
+        public void Delete(int id)
+        {
+            repository.Delete(id);
+            //UoW.Commit();
+        }
     }
 }
