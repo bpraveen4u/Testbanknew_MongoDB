@@ -39,7 +39,7 @@ namespace TestBank.Tests.ApiControllers
         }
 
         [TestMethod]
-        public void Get_All_Returns_AllQuestions_Action()
+        public void GetAll_QuestionController_Returns_PagedQuestions()
         {
             // Arrange   
             IQueryable<Question> fakeQuestion = GetQuestions();
@@ -84,7 +84,7 @@ namespace TestBank.Tests.ApiControllers
         }
         
         [TestMethod]
-        public void Get_One_Question_Action()
+        public void Get_QuestionController_Returns_Question()
         {
             // Arrange   
             Question fakeQuestion = new Question() { Id = 1000, Description = "test fake assessment" };
@@ -103,10 +103,11 @@ namespace TestBank.Tests.ApiControllers
         }
 
         [TestMethod]
-        public void Post_Question_Action_Returns_CreatedStatusCode()
+        public void Post_QuestionController_Returns_CreatedStatusCode()
         {
             // Arrange   
-            var fakeQuestionModel = new QuestionDetailsModel() { Id = 1000, Description = "test fake assessment", Category = "C#" };
+            //var fakeQuestionModel = new QuestionDetailsModel() { Id = 1000, Description = "test fake assessment", Category = "C#" };
+            var fakeQuestionModel = GetFakeQuestionModel();
             questionRepository.Setup(x => x.Insert(It.IsAny<Question>()));
             questionManager = new QuestionManager(fakeUoW.Object, questionRepository.Object);
             var controller = SetupControllerContext(HttpMethod.Post, "http://localhost/api/questions/");
@@ -120,8 +121,23 @@ namespace TestBank.Tests.ApiControllers
             Assert.AreEqual(string.Format("http://localhost/api/questions/{0}", newQuestion.Id), response.Headers.Location.ToString());
         }
 
+        private static QuestionDetailsModel GetFakeQuestionModel()
+        {
+            var fakeQuestionModel = new QuestionDetailsModel()
+            {
+                Id = 1000,
+                Description = "Test 123 Question",
+                Category = "C#",
+                Options = new List<OptionModel>() { new OptionModel() { Id = "A", Description = "Opt A", Type = OptionType.RadioButton, IsCorrect = false},
+                    new OptionModel() { Id = "B", Description = "Opt B", Type = OptionType.RadioButton, IsCorrect = true}
+                },
+                CorrectScore = 1
+            };
+            return fakeQuestionModel;
+        }
+
         [TestMethod]
-        public void Post_Question_Action_Returns_BusinessException()
+        public void Post_QuestionController_Returns_BusinessException()
         {
             // Arrange   
             var fakeQuestionModel = new QuestionDetailsModel() { Id = 1000, Description = "test fake assessment" };
@@ -136,12 +152,13 @@ namespace TestBank.Tests.ApiControllers
         }
 
         [TestMethod]
-        public void Put_Question_Returns_OKStatusCode()
+        public void Put_QuestionController_OKStatusCode()
         {
             // Arrange  
-            Question fakeQuestion = new Question() { Id = 1000, Description = "test fake question" };
+            Question fakeQuestion = GetFakeQuestion();
 
-            var fakeQuestionModel = new QuestionDetailsModel() { Id = 1000, Description = "test fake question", Category = "c# 5" };
+            //var fakeQuestionModel = new QuestionDetailsModel() { Id = 1000, Description = "test fake question", Category = "c# 5" };
+            var fakeQuestionModel = GetFakeQuestionModel();
             questionRepository.Setup(x => x.Update(It.IsAny<Question>()));
             questionRepository.Setup(x => x.GetByID(1000)).Returns(fakeQuestion);
             questionManager = new QuestionManager(fakeUoW.Object, questionRepository.Object);
@@ -154,7 +171,7 @@ namespace TestBank.Tests.ApiControllers
         }
 
         [TestMethod]
-        public void Put_Question_Returns_OKNotFoundCode()
+        public void Put_QuestionController_OKNotFoundCode()
         {
             // Arrange  
             Question fakeQuestion = new Question() { Id = 1001, Description = "test fake question" };
@@ -172,7 +189,7 @@ namespace TestBank.Tests.ApiControllers
         }
 
         [TestMethod]
-        public void Delete_Question_Returns_NoContentStatusCode()
+        public void Delete_QuestionController_NoContentStatusCode()
         {
             // Arrange         
             var fakeUoW = new Mock<IUnitOfWork>();
@@ -212,6 +229,21 @@ namespace TestBank.Tests.ApiControllers
                 new Question { Id=4, Category = "C", Description="Quesiton 4 Desc"}
                 }.AsQueryable();
             return fakeQuestions;
+        }
+
+        private static Question GetFakeQuestion()
+        {
+            var fakeQuestion = new Question()
+            {
+                Id = 1000,
+                Description = "Test 123 Question",
+                Category = "C#",
+                Options = new List<Option>() { new Option() { Id = "A", Description = "Opt A", Type = OptionType.RadioButton, IsCorrect = false},
+                    new Option() { Id = "B", Description = "Opt B", Type = OptionType.RadioButton, IsCorrect = true}
+                },
+                CorrectScore = 1
+            };
+            return fakeQuestion;
         }
     }
 }

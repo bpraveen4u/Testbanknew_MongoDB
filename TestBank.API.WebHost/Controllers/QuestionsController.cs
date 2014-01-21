@@ -16,7 +16,7 @@ namespace TestBank.API.WebHost.Controllers
     public class QuestionsController : BaseApiController
     {
         private readonly QuestionManager manager;
-        const int PAGE_SIZE = 2;
+        const int PAGE_SIZE = 3;
         public QuestionsController(QuestionManager manager)
         {
             this.manager = manager;
@@ -51,14 +51,48 @@ namespace TestBank.API.WebHost.Controllers
         }
 
         // GET api/questions/5
+        [HttpGet]
         public HttpResponseMessage Get(int id)
         {
-            var model = TheModelFactory.CreateDetails(manager.Get(id));
-            if (model == null)
+            var question = manager.Get(id);
+            
+            if (question == null)
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
+
+            var model = TheModelFactory.CreateDetails(question);
             return Request.CreateResponse(HttpStatusCode.OK, model);
+        }
+
+        // GET api/questions/5/options
+        [HttpGet]
+        public HttpResponseMessage GetQuestionOptions(int questionId, string optionId = null)
+        {
+            var question = manager.Get(questionId);
+            
+            if (question == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+            var model = TheModelFactory.CreateDetails(question);
+
+            if (optionId == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, model.Options);
+            }
+            else
+            {
+                if (model.Options != null)
+                {
+                    var option = model.Options.Where(o => o.Id == optionId).SingleOrDefault();
+                    if (option != null)
+                        return Request.CreateResponse(HttpStatusCode.OK, model.Options.Where(o => o.Id == optionId).SingleOrDefault());
+                }
+            }
+
+            return Request.CreateResponse(HttpStatusCode.NotFound);
         }
 
         // POST api/questions
@@ -82,7 +116,7 @@ namespace TestBank.API.WebHost.Controllers
         // PUT api/questions/5
         [HttpPut]
         [HttpPatch]
-        public HttpResponseMessage Put(int id, [FromBody]QuestionModel model)
+        public HttpResponseMessage Put(int id, [FromBody]QuestionDetailsModel model)
         {
             model.Id = id;
             var originalQuestion = manager.Get(id);
@@ -90,7 +124,7 @@ namespace TestBank.API.WebHost.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
-            
+            Mapper.AssertConfigurationIsValid();
             var question = Mapper.Map<Question>(model);
             question.CreatedDate = originalQuestion.CreatedDate;
             question.CreatedUser = originalQuestion.CreatedUser;

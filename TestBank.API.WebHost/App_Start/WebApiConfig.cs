@@ -15,15 +15,27 @@ namespace TestBank.API.WebHost
         public static void Register(HttpConfiguration config)
         {
             config.Routes.MapHttpRoute(
+                name: "AssessmentQuestionOptions",
+                routeTemplate: "api/assessments/{assessmentId}/questions/{questionId}/options/{optionId}",
+                defaults: new { controller = "assessments", action = "GetAssessmentQuestionOptions", optionId = RouteParameter.Optional }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "AssessmentQuestions",
-                routeTemplate: "api/assessments/{assessmentId}/questions/{id}",
-                defaults: new { controller = "assessments", action = "GetAssessmentQuestions", id = RouteParameter.Optional }
+                routeTemplate: "api/assessments/{assessmentId}/questions/{questionId}",
+                defaults: new { controller = "assessments", action = "GetAssessmentQuestions", questionId = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(
                 name: "Assessments",
                 routeTemplate: "api/assessments/{id}",
                 defaults: new { controller = "assessments", id = RouteParameter.Optional }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "QuestionOptions",
+                routeTemplate: "api/questions/{questionId}/options/{optionId}",
+                defaults: new { controller = "questions", action = "GetQuestionOptions", optionId = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(
@@ -38,6 +50,7 @@ namespace TestBank.API.WebHost
             var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().FirstOrDefault();
             jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             jsonFormatter.SerializerSettings.Converters.Add(new LinkModelConverter());
+            jsonFormatter.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
             //json.SerializerSettings..PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
             config.Formatters.Remove(config.Formatters.XmlFormatter);
             //config.Formatters.Add(new CustomXmlFormatter());

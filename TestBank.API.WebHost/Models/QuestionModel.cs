@@ -19,7 +19,7 @@ namespace TestBank.API.WebHost.Models
 
     public class QuestionDetailsModel : QuestionModel
     {
-        public List<Option> Options { get; set; }
+        public List<OptionModel> Options { get; set; }
         
         public string InstructorRemarks { get; set; }
         public byte Weightage { get; set; }
@@ -29,4 +29,14 @@ namespace TestBank.API.WebHost.Models
         public string CreatedUser { get; set; }
         public DateTime CreatedDate { get; set; }
     }
+
+    public class OptionModel
+    {
+        public ICollection<LinkModel> Links { get; set; }
+        public string Id { get; set; }
+        public OptionType Type { get; set; }
+        public string Description { get; set; }
+        public bool IsCorrect { get; set; }
+    }
+
 }

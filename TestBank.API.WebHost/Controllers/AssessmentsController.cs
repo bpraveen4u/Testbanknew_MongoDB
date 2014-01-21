@@ -17,7 +17,7 @@ namespace TestBank.API.WebHost.Controllers
     {
         private readonly AssessmentManager manager;
         private readonly QuestionManager questionManager;
-        const int PAGE_SIZE = 2;
+        const int PAGE_SIZE = 3;
         public AssessmentsController(AssessmentManager manager, QuestionManager questionManager)
         {
             this.manager = manager;
@@ -72,7 +72,7 @@ namespace TestBank.API.WebHost.Controllers
                     var question = questionManager.Get(qId);
                     if (question != null)
                     {
-                        model.Questions.Add(TheModelFactory.CreateDetails(question, id, "AssessmentQuestions"));
+                        model.Questions.Add(TheModelFactory.CreateDetails(question, id, "AssessmentQuestions", new { assessmentId = id, questionId = qId}));
                     }
                 }
             }
@@ -81,7 +81,7 @@ namespace TestBank.API.WebHost.Controllers
         }
 
         // GET api/assessments/5/questions
-        public HttpResponseMessage GetAssessmentQuestions(int assessmentId)
+        public HttpResponseMessage GetAssessmentQuestions(int assessmentId, int questionId = 0)
         {
             var assessment = manager.Get(assessmentId);
 
@@ -90,50 +90,86 @@ namespace TestBank.API.WebHost.Controllers
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
 
-            var model = TheModelFactory.CreateDetails(assessment);
+            //var model = TheModelFactory.CreateDetails(assessment);
 
             var questions = new List<QuestionModel>();
-            if (assessment.Questions != null && assessment.Questions.Length > 0)
+            if (questionId == 0)
             {
-                foreach (var qId in assessment.Questions)
+                if (assessment.Questions != null && assessment.Questions.Length > 0)
                 {
-                    var question = questionManager.Get(qId);
+                    foreach (var qId in assessment.Questions)
+                    {
+                        var question = questionManager.Get(qId);
+                        if (question != null)
+                        {
+                            questions.Add(TheModelFactory.CreateDetails(question, assessmentId, "AssessmentQuestions", new { assessmentId = assessmentId, questionId = qId }));
+                        }
+                    }
+
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, questions);
+            }
+            else
+            {
+                if (assessment.Questions != null && assessment.Questions.Length > 0)
+                {
+                    var question = questionManager.Get(questionId);
                     if (question != null)
                     {
-                        questions.Add(TheModelFactory.CreateDetails(question, assessmentId, "AssessmentQuestions"));
+                        questions.Add(TheModelFactory.CreateDetails(question, assessmentId, "AssessmentQuestions", new { assessmentId = assessmentId, questionId = questionId }));
                     }
                 }
-
             }
+            
 
-            return Request.CreateResponse(HttpStatusCode.OK, questions);
+            return Request.CreateResponse(HttpStatusCode.NotFound);
         }
 
-        // GET api/assessments/5
-        public HttpResponseMessage GetAssessmentQuestions(int assessmentId, int id)
+        // GET api/assessments/5/questions/1/options
+        public HttpResponseMessage GetAssessmentQuestionOptions(int assessmentId, int questionId)
         {
             var assessment = manager.Get(assessmentId);
 
-            if (assessment == null || assessment.Questions == null || !assessment.Questions.Contains(id))
+            if (assessment == null || assessment.Questions == null || !assessment.Questions.Contains(questionId))
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
 
-            var model = TheModelFactory.CreateDetails(assessment);
-
-            if (assessment.Questions != null && assessment.Questions.Length > 0)
+            var question = questionManager.Get(questionId);
+            if (null != question)
             {
-                var question = questionManager.Get(id);
-                if (null == question)
-                {
-                    return Request.CreateResponse(HttpStatusCode.NotFound);
-                }
-
-                return Request.CreateResponse(HttpStatusCode.OK, TheModelFactory.CreateDetails(question, assessmentId, "AssessmentQuestions"));
+                var questionModel = TheModelFactory.CreateDetails(question, assessmentId, "AssessmentQuestions", new { assessmentId = assessmentId, questionId = questionId });
+                return Request.CreateResponse(HttpStatusCode.OK, questionModel.Options);
             }
 
             return Request.CreateResponse(HttpStatusCode.NotFound);
         }
+
+        // GET api/assessments/5/questions/1/options/1
+        public HttpResponseMessage GetAssessmentQuestionOptions(int assessmentId, int questionId, string optionId)
+        {
+            var assessment = manager.Get(assessmentId);
+
+            if (assessment == null || assessment.Questions == null || !assessment.Questions.Contains(questionId))
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+            var question = questionManager.Get(questionId);
+            var questionModel = TheModelFactory.CreateDetails(question, assessmentId, "AssessmentQuestions", new { assessmentId = assessmentId, questionId = questionId });
+            if (null != questionModel && questionModel.Options != null)
+            {
+                var option = questionModel.Options.Where(o => o.Id == optionId).FirstOrDefault();
+
+                if (null != option)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, option);
+                }
+            }
+
+            return Request.CreateResponse(HttpStatusCode.NotFound);
+        }
+
 
         // POST api/assessments
         public HttpResponseMessage Post([FromBody]AssessmentDetailsModel model)

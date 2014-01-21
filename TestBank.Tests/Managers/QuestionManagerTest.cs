@@ -20,19 +20,21 @@ namespace TestBank.Tests.Managers
     public class QuestionManagerTest
     {
         private Mock<IQuestionRepository> repository;
-
+        private Mock<IUnitOfWork> fakeUoW;
+        private QuestionManager questionManager;
         [TestInitialize]
         public void Setup()
         {
             repository = new Mock<IQuestionRepository>();
+            fakeUoW = new Mock<IUnitOfWork>();
         }
 
         [TestMethod]
-        public void Get_Questions_Returns_AllQuestions()
+        public void GetAll_QuestionManager_Returns_PagedQuestions()
         {
             // Arrange   
             InitQuestions(repository);
-            var questionManager = new QuestionManager(null, repository.Object);
+            questionManager = new QuestionManager(null, repository.Object);
 
             //// Act
             var pagedQuestions = questionManager.GetAll(page: 1, pageSize: 3);
@@ -44,13 +46,13 @@ namespace TestBank.Tests.Managers
         }
 
         [TestMethod]
-        public void Get_Question_Returns_Question()
+        public void Get_QuestionManager_Returns_Question()
         {
             // Arrange   
             var fakeQuestion = new Question() { Id = 100, Description = "Test 123 Question", Category = "C#" };
             repository.Setup(s => s.GetByID(100)).Returns(fakeQuestion);
 
-            var questionManager = new QuestionManager(null, repository.Object);
+            questionManager = new QuestionManager(null, repository.Object);
 
             //// Act
             var question = questionManager.Get(100);
@@ -61,25 +63,71 @@ namespace TestBank.Tests.Managers
         }
 
         [TestMethod]
-        public void Insert_Question_Returns_Question()
+        public void Insert_QuestionManager_Returns_Question()
         {
             // Arrange 
             var fakeUoW = new Mock<IUnitOfWork>();
             fakeUoW.Setup(s => s.Commit());
 
-            var fakeQuestion = new Question() { Id = 100, Description = "Test 123 Question", Category = "C#" };
-            repository.Setup(s => s.GetByID(100)).Returns(fakeQuestion);
+            var fakeQuestion = GetFakeQuestion();
+            repository.Setup(s => s.GetByID(1000)).Returns(fakeQuestion);
 
-            var questionManager = new QuestionManager(fakeUoW.Object, repository.Object);
+            questionManager = new QuestionManager(fakeUoW.Object, repository.Object);
 
             //// Act
             var newQuestion = questionManager.Insert(fakeQuestion);
             //// Assert
             Assert.IsNotNull(newQuestion, "Result is null");
             Assert.IsInstanceOfType(newQuestion, typeof(Question), "Wrong Model");
-            Assert.AreEqual(100, newQuestion.Id, "Got wrong number of Question");
+            Assert.AreEqual(1000, newQuestion.Id, "Got wrong number of Question");
         }
 
+        private static Question GetFakeQuestion()
+        {
+            var fakeQuestion = new Question()
+            {
+                Id = 1000,
+                Description = "Test 123 Question",
+                Category = "C#",
+                Options = new List<Option>() { new Option() { Id = "A", Description = "Opt A", Type = OptionType.RadioButton, IsCorrect = false},
+                    new Option() { Id = "B", Description = "Opt B", Type = OptionType.RadioButton, IsCorrect = true}
+                },
+                CorrectScore = 1
+            };
+            return fakeQuestion;
+        }
+
+        [TestMethod]
+        public void Update_QuestionManager_Returns_Question()
+        {
+            // Arrange   
+            var fakeQuestion = GetFakeQuestion();
+            repository.Setup(x => x.Update(It.IsAny<Question>()));
+            questionManager = new QuestionManager(fakeUoW.Object, repository.Object);
+            //// Act
+            var newQuestion = questionManager.Update(fakeQuestion);
+
+            //// Assert
+            Assert.IsNotNull(newQuestion, "Result is null");
+            Assert.IsInstanceOfType(newQuestion, typeof(Question), "Invalid Enitity");
+            Assert.AreEqual(1000, newQuestion.Id);
+        }
+
+        [TestMethod]
+        public void Delete_QuestionManager_Returns_void()
+        {
+            // Arrange   
+            var fakeQuestion = new Question() { Id = 1000, Description = "test fake assessment", Category = "C" };
+            repository.Setup(x => x.Delete(1000));
+            questionManager = new QuestionManager(fakeUoW.Object, repository.Object);
+            //// Act
+            questionManager.Delete(1000);
+
+            //// Assert
+            //Assert.IsNotNull(newAssessment, "Result is null");
+            //Assert.IsInstanceOfType(newAssessment, typeof(Assessment), "Invalid Enitity");
+            //Assert.AreEqual(1000, newAssessment.Id);
+        }
 
         private void InitQuestions(Mock<IQuestionRepository> questionMock,
             Expression<Func<Question, bool>> filter = null,

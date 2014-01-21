@@ -63,7 +63,7 @@ namespace TestBank.API.WebHost.Models
             return questionModel;
         }
 
-        public QuestionDetailsModel CreateDetails(Question question, int assessmentId = 0, string routeTemplate = null)
+        public QuestionDetailsModel CreateDetails(Question question, int assessmentId = 0, string routeTemplate = null, dynamic routeData = null)
         {
             if (question == null)
             {
@@ -76,16 +76,52 @@ namespace TestBank.API.WebHost.Models
                 {
                     CreateLink(urlHelper.Link("Questions", new { Id = question.Id }), "self")
                 };
+                if (questionModel.Options != null && questionModel.Options.Count > 0)
+                {
+                    foreach (var opt in questionModel.Options)
+                    {
+                        CreateOptionLink(opt, "QuestionOptions", new { questionId = questionModel.Id, optionId = opt.Id });
+                    }
+                }
             }
             else if (routeTemplate.Equals("AssessmentQuestions", StringComparison.InvariantCultureIgnoreCase))
             {
                 questionModel.Links = new List<LinkModel>()
                 {
-                    CreateLink(urlHelper.Link("AssessmentQuestions", new { Id = question.Id, assessmentId = assessmentId }), "self")
+                    CreateLink(urlHelper.Link("AssessmentQuestions", routeData), "self")
+                };
+
+                if (questionModel.Options != null && questionModel.Options.Count > 0)
+                {
+                    foreach (var opt in questionModel.Options)
+                    {
+                        CreateOptionLink(opt, "AssessmentQuestionOptions", new { assessmentId = assessmentId, questionId = questionModel.Id, optionId = opt.Id });
+                    }
+                }
+            }
+            else if (routeTemplate.Equals("QuestionOptions", StringComparison.InvariantCultureIgnoreCase))
+            {
+                questionModel.Links = new List<LinkModel>()
+                {
+                    CreateLink(urlHelper.Link("AssessmentQuestions", routeData), "self")
                 };
             }
             
             return questionModel;
+        }
+
+        public void CreateOptionLink(OptionModel optionModel, string routeTemplate, object routeData)
+        {
+            //if (questionModel.Options != null && questionModel.Options.Count > 0)
+            //{
+            //    foreach (var opt in questionModel.Options)
+            //    {
+            optionModel.Links = new List<LinkModel>()
+            {
+                CreateLink(urlHelper.Link(routeTemplate, routeData), "self")
+            };
+            //    }
+            //}
         }
 
 

@@ -39,7 +39,7 @@ namespace TestBank.Tests.Managers
         }
 
         [TestMethod]
-        public void Get_All_Returns_AllAssessments()
+        public void GetAll_AssessmentManager_Returns_PagedAssessments()
         {
             // Arrange   
             InitAssessmentCategoriesNew(assessmentRepository);
@@ -55,7 +55,7 @@ namespace TestBank.Tests.Managers
         }
         
         [TestMethod]
-        public void Get_One_Assessment()
+        public void Get_AssessmentManager_Returns_Assessment()
         {
             // Arrange   
             Assessment fakeAssessment = new Assessment() { Id=1000, Name = "test fake assessment"};
@@ -72,7 +72,7 @@ namespace TestBank.Tests.Managers
         }
 
         [TestMethod]
-        public void Insert_Assessment_Returns_Assessment()
+        public void Insert_AssessmentManager_Returns_Assessment()
         {
             // Arrange   
             var fakeAssessment = new Assessment() { Id = 1000, Name = "test fake assessment", Duration = 10 };
@@ -88,7 +88,7 @@ namespace TestBank.Tests.Managers
         }
 
         [TestMethod]
-        public void Update_Assessment_Returns_Assessment()
+        public void Update_AssessmentManager_Returns_Assessment()
         {
             // Arrange   
             var fakeAssessment = new Assessment() { Id = 1000, Name = "test fake assessment", Duration = 10 };
@@ -104,7 +104,7 @@ namespace TestBank.Tests.Managers
         }
 
         [TestMethod]
-        public void Delete_Assessment_Returns_Assessment()
+        public void Delete_AssessmentManager_Returns_void()
         {
             // Arrange   
             var fakeAssessment = new Assessment() { Id = 1000, Name = "test fake assessment", Duration = 10 };

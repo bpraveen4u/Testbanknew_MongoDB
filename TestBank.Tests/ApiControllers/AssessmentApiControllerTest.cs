@@ -29,6 +29,7 @@ namespace TestBank.Tests.ApiControllers
     {
         private Mock<IAssessmentRepository> assessmentRepository;
         private AssessmentManager assessmentManager;
+        private QuestionManager questionManager;
         private Mock<IUnitOfWork> fakeUoW;
         [TestInitialize]
         public void Setup()
@@ -39,7 +40,7 @@ namespace TestBank.Tests.ApiControllers
         }
 
         [TestMethod]
-        public void Get_All_Returns_AllAssessments_Action()
+        public void GetAll_AssessmentController_Returns_PagedAssessments()
         {
             // Arrange   
             IQueryable<Assessment> fakeAssessment = GetAssessments();
@@ -67,7 +68,7 @@ namespace TestBank.Tests.ApiControllers
             WebApiConfig.Register(httpConfiguration);
             var httpRouteData = new HttpRouteData(httpConfiguration.Routes["Assessments"],
                 new HttpRouteValueDictionary { { "controller", "Assessments" } });
-            var controller = new AssessmentsController(assessmentManager)
+            var controller = new AssessmentsController(assessmentManager, questionManager)
             {
                 Request = new HttpRequestMessage(method, url)
                 {
@@ -84,7 +85,7 @@ namespace TestBank.Tests.ApiControllers
         }
         
         [TestMethod]
-        public void Get_One_Assessment_Action()
+        public void Get_AssessmentController_Returns_Assessment()
         {
             // Arrange   
             Assessment fakeAssessment = new Assessment() { Id = 1000, Name = "test fake assessment" };
@@ -103,7 +104,7 @@ namespace TestBank.Tests.ApiControllers
         }
 
         [TestMethod]
-        public void Post_Assessment_Action_Returns_CreatedStatusCode()
+        public void Post_AssessmentController_Returns_CreatedStatusCode()
         {
             // Arrange   
             var fakeAssessmentModel = new AssessmentDetailsModel() { Id = 1000, Name = "test fake assessment", Duration = 10 };
@@ -121,7 +122,7 @@ namespace TestBank.Tests.ApiControllers
         }
 
         [TestMethod]
-        public void Post_Assessment_Action_Returns_BusinessException()
+        public void Post_AssessmentController_Returns_BusinessException()
         {
             // Arrange   
             var fakeAssessmentModel = new AssessmentDetailsModel() { Id = 1000, Name = "test fake assessment" };
@@ -136,7 +137,7 @@ namespace TestBank.Tests.ApiControllers
         }
 
         [TestMethod]
-        public void Put_Assessment_Returns_OKStatusCode()
+        public void Put_AssessmentController_Returns_OKStatusCode()
         {
             // Arrange  
             Assessment fakeAssessment = new Assessment() { Id = 1000, Name = "test fake assessment" };
@@ -154,7 +155,7 @@ namespace TestBank.Tests.ApiControllers
         }
 
         [TestMethod]
-        public void Put_Assessment_Returns_OKNotFoundCode()
+        public void Put_AssessmentController_Returns_OKNotFoundCode()
         {
             // Arrange  
             Assessment fakeAssessment = new Assessment() { Id = 1001, Name = "test fake assessment" };
@@ -172,7 +173,7 @@ namespace TestBank.Tests.ApiControllers
         }
 
         [TestMethod]
-        public void Delete_Assessment_Returns_NoContentStatusCode()
+        public void Delete_AssessmentController_Returns_NoContentStatusCode()
         {
             // Arrange         
             var fakeUoW = new Mock<IUnitOfWork>();
