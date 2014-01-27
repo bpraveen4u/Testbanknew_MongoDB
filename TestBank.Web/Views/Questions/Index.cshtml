@@ -1,0 +1,90 @@
+@using PagedList;
+@using PagedList.Mvc;
+@model PagedList.IPagedList<TestBank.Web.ViewModels.QuestionViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+<p>
+    @Html.ActionLink("New Question", "Create")
+</p>
+<table id="listQuestion">
+    <tr>
+        <th></th>
+        <th>
+            Description
+        </th>
+        @*<th>
+            InstructorRemarks
+        </th>*@
+        <th>
+            Category
+        </th>
+        @*<th>
+            Options
+        </th>
+        <th>
+            Weightage
+        </th>
+        <th>
+            CorrectScore
+        </th>
+        <th>
+            WrongScore
+        </th>*@
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td class="tdBottomBorder" align="center" valign="top">
+            <a href="@Url.Action("Edit",new { id = item.Id })"><img title="Edit" src="@Url.Content("~/Images/edit-icon.png")" alt="Edit"/></a>
+            <!--a href="@Url.Action("Details", new { id = item.Id })"><img title="View Details" src="@Url.Content("~/Images/view_detail.png")" alt="Details"/></a-->
+            @*@Html.ActionLink("Details", "Details", new { id=item.Id })*@
+           @* @Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
+        </td>
+        <td width="80%" class="tdBottomBorder"><span>@item.Description
+        
+        @{ var opts = string.Empty;
+            if (item.Options != null)
+            {
+                foreach (var o in item.Options)
+                {
+                    if (o.IsCorrect)
+                    {
+                        opts = string.Format("{0} <b>{1}. {2}</b> <br/>", opts, o.Id, o.Text);
+                    }
+                    else
+                    {
+                        opts = string.Format("{0} {1}. {2} <br/>", opts, o.Id, o.Text);
+                    }
+                }
+            }
+            @Html.Raw(opts);
+        }
+        </span>
+        </td>
+        @*<td>
+			@item.InstructorRemarks
+        </td>*@
+        <td width="10%" class="tdBottomBorder">
+			@item.Category
+        </td>
+        @*<td>
+			@(item.Options == null ? "None" : item.Options.Count.ToString())
+        </td>
+        <td>
+			@item.Weightage
+        </td>
+        <td>
+			@item.CorrectScore
+        </td>
+        <td>
+			@item.WrongScore
+        </td>*@
+    </tr>
+}
+
+</table>
+<div style="text-align:center">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), PagedListRenderOptions.Classic)
+</div>

@@ -1,0 +1,96 @@
+@model TestBank.Web.ViewModels.AssessmentViewModel
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+<div class="MainContent">
+    <table>
+        <tr>
+            <td>@Html.LabelFor(model => model.TestName)
+            </td>
+            <td>@Html.EditorFor(model => model.TestName)
+            </td>
+            <td>@Html.ValidationMessageFor(model => model.TestName)
+            </td>
+        </tr>
+        @*<tr>
+            <td>@Html.LabelFor(model => model.Link)</td>
+            <td>@Html.Raw(string.Format("<a href='{0}' target='_blank' >Links</a>", Html.DisplayFor(model => model.Link)))</td>
+            <td>@Html.ValidationMessageFor(model => model.Link)</td>
+        </tr>*@
+        @*<tr>
+            <td>@Html.LabelFor(model => model.ShortLink)</td>
+            <td>@Html.Raw(string.Format("<a href='{0}' target='_blank' >ShortLink</a>", Html.DisplayFor(m => m.ShortLink)))</td>
+            <td>@Html.ValidationMessageFor(model => model.ShortLink)</td>
+        </tr>*@
+        <tr>
+            <td>@Html.LabelFor(model => model.Enable)</td>
+            <td>@Html.EditorFor(model => model.Enable)</td>
+            <td>@Html.ValidationMessageFor(model => model.Enable)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.Duration)</td>
+            <td>@Html.EditorFor(model => model.Duration)</td>
+            <td>@Html.ValidationMessageFor(model => model.Duration)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.MaxOptions)</td>
+            <td>@Html.EditorFor(model => model.MaxOptions)</td>
+            <td>@Html.ValidationMessageFor(model => model.MaxOptions)</td>
+        </tr>
+        @*<tr>
+            <td>@Html.LabelFor(model => model.CreationDate)</td>
+            <td>@Html.DisplayFor(model => model.CreationDate)</td>
+            <td>@Html.ValidationMessageFor(model => model.CreationDate)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.CreatedUser)</td>
+            <td>@Html.DisplayFor(model => model.CreatedUser)</td>
+            <td>@Html.ValidationMessageFor(model => model.CreatedUser)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.ModifiedDate)</td>
+            <td>@Html.DisplayFor(model => model.ModifiedDate)</td>
+            <td>@Html.ValidationMessageFor(model => model.ModifiedDate)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.ModifiedUser)</td>
+            <td>@Html.DisplayFor(model => model.ModifiedUser)</td>
+            <td>@Html.ValidationMessageFor(model => model.ModifiedUser)</td>
+        </tr>*@
+        <tr>
+            <td>@Html.Label("All Questions")</td>
+            @*<td colspan="2">@Html.ListBoxFor(m => m.QuestionIds, new MultiSelectList(Model.AllQuestions, "QuestionId", "Description"), new { size = "10", style = "width:500px" })</td>*@
+            <td colspan="2">
+                <table>
+                    <tr>
+                        <td>
+                            <select id ="selCategory" style="width: 300px">
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select id ="allQuestions" multiple ="multiple" style="height:200px; width: 300px">
+                            </select>
+                        </td>
+                        <td>
+                            <td valign="middle" align="center">
+                            <input id="btnAdd" type="button" value=" > " /><br />
+                            <input id="btnAddAll" type="button" value=" >> " /><br />
+                            <input id="btnRemove" type="button" value=" < " /><br />
+                            <input id="btnRemoveAll"type="button" value=" << " />
+                        </td>
+                        <td>
+                            @Html.ListBoxFor(m => m.Questions, Model.Questions.Select(s => new SelectListItem() { Value = s.QuestionId.ToString(), Text = s.Description }), 
+                                new { @id = "selectedQuestions", @style = "height:200px; width: 300px" }) 
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="2">@Html.ValidationMessageFor(model => model.QuestionIds)</td>
+        </tr>
+    </table>
+</div>

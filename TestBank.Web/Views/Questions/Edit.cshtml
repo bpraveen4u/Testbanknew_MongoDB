@@ -1,0 +1,23 @@
+@model TestBank.Web.ViewModels.QuestionViewModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    @*<fieldset>
+        <legend>QuestionViewModel</legend>*@
+
+        @Html.HiddenFor(model => model.Id)
+		@Html.Partial("_CreateOrEdit", Model)
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    @*</fieldset>*@
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

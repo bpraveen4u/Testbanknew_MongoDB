@@ -10,19 +10,21 @@ using AutoMapper;
 using TestBank.API.WebHost.Models;
 using System.Web.Http.Routing;
 using TestBank.Business.Manager;
+using TestBank.Entity.Models;
 
 namespace TestBank.API.WebHost.Controllers
 {
     public class QuestionsController : BaseApiController
     {
         private readonly QuestionManager manager;
-        const int PAGE_SIZE = 3;
+        const int PAGE_SIZE = 10;
         public QuestionsController(QuestionManager manager)
         {
             this.manager = manager;
         }
 
         // GET api/questions
+        [HttpGet]
         public PagedModel<QuestionModel> GetAll(int page = 1)
         {
             if (page < 1) page = 1;
@@ -49,6 +51,20 @@ namespace TestBank.API.WebHost.Controllers
                 PagedData = pagedQuestions.PagedData.Select(a => TheModelFactory.Create(a)).ToList()
             };
         }
+
+        // GET api/questions
+        public List<QuestionModel> GetAllByCategory(string categoryName)
+        {
+            var questions = manager.GetAll(categoryName);
+            return questions.Select(q => TheModelFactory.Create(q)).ToList();
+        }
+
+        //public List<string> GetCategory()
+        //{
+        //    return new List<string>() { "C#", "C" };
+        //    //var questions = manager.GetAll(categoryName);
+        //    //return questions.Select(q => TheModelFactory.Create(q)).ToList();
+        //}
 
         // GET api/questions/5
         [HttpGet]

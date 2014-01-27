@@ -7,6 +7,7 @@ using TestBank.Entity;
 using TestBank.API.WebHost.Models;
 using System.Web.Http.Routing;
 using System.Net.Http;
+using TestBank.Entity.Models;
 
 namespace TestBank.API.WebHost.Infrastructure.AutoMapper.Profiles
 {

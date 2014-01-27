@@ -1,0 +1,42 @@
+@model TestBank.Web.ViewModels.UserAnswerViewModel
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Comments)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Comments)
+    @Html.ValidationMessageFor(model => model.Comments)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.TimeToComplete)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.TimeToComplete)
+    @Html.ValidationMessageFor(model => model.TimeToComplete)
+</div>
+
+<div class="editor-label">
+    Assessment
+</div>
+<div class="editor-field">
+    @Html.DropDownListFor(model => model.AssessmentId, ((IEnumerable<TestBank.Entity.Model.Assessment>)ViewBag.PossibleAssessments).Select(option => new SelectListItem {
+        Text = Html.DisplayTextFor(_ => option).ToString(), 
+        Value = option.Id.ToString(),
+        Selected = (Model != null) && (option.Id == Model.AssessmentId)
+    }), "Choose...")
+    @Html.ValidationMessageFor(model => model.AssessmentId)
+</div>
+<div class="editor-label">
+    User
+</div>
+<div class="editor-field">
+    @Html.DropDownListFor(model => model.UserId, ((IEnumerable<TestBank.Entity.Model.User>)ViewBag.PossibleUsers).Select(option => new SelectListItem {
+        Text = (option == null ? "None" : option.LastName), 
+        Value = option.Id.ToString(),
+        Selected = (Model != null) && (option.Id == Model.UserId)
+    }), "Choose...")
+    @Html.ValidationMessageFor(model => model.UserId)
+</div>

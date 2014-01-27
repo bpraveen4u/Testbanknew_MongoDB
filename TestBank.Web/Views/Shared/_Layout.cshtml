@@ -1,0 +1,81 @@
+﻿@using System.Web.Optimization;
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="keywords" content="Online testing, Create online quizzes, free quiz maker, web based tests, online quiz maker, testing, test maker, assesments, quiz software, quizzes, exams, free, classmarker, schools, teachers, students, instant marking, multiple choice, fill in the blank">
+        <meta name="description" content="" />
+        <title>@ViewBag.Title - Free online test's and quizzes Exam-Point.com</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <link href="http://fonts.googleapis.com/css?family=Arvo" rel="stylesheet" type="text/css" /><link href="http://fonts.googleapis.com/css?family=Arvo" rel="stylesheet" type="text/css" />
+        @*<meta http-equiv="content-type" content="text/html; charset=utf-8" />*@
+        @*<link href="style.css" rel="stylesheet" type="text/css" media="screen" />*@
+        <meta name="viewport" content="width=device-width" />
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+        <script type="text/javascript">
+            var AppPath = '@Url.Content("~/")'
+        </script>
+    </head>
+    <body>
+        <div id="wrapper">
+	        <div id="wrapper2">
+		        <div id="header" class="container">
+                    <div id="loginHeadLink">
+                        @Html.Partial("_LoginPartial")
+                    </div>
+			        <div id="logo">
+				        <h1><a href="#">Exam Point</a></h1>
+				        <p>Lets test the skills</p>
+			        </div>
+			        <div id="menu">
+				        <ul>
+					        <li class="@Html.ActivePage("Home", "Index")">@Html.ActionLink("Home", "Index", "Home")</li>
+					        @*<li class="@Html.ActivePage("Account", "Login")">@Html.ActionLink("Login", "Login", "Account")</li>
+                            <li class="@Html.ActivePage("Account", "Register")">@Html.ActionLink("Register", "Register", "Account")</li>
+					        <li class="@Html.ActivePage("Home", "Contact")">@Html.ActionLink("Contact", "Contact", "Home")</li>
+                            <li>@Html.ActionLink("Home", "Index", "Home")</li>*@    
+                            @if (Request.IsAuthenticated && HttpContext.Current.Session["APIKey"] != null)
+                            {
+                                <li class="@Html.ActivePage("Assessments", "Index")">@Html.ActionLink("Assessments", "Index", "Assessments")</li>
+                                <li class="@Html.ActivePage("Questions", "Index")">@Html.ActionLink("Question Bank", "Index", "Questions")</li>
+                                <!--li>@Html.ActionLink("About", "About", "Home")</li-->
+                                <!--li>@Html.ActionLink("Contact", "Contact", "Home")</li-->
+                            }
+				        </ul>
+			        </div>
+		        </div>
+		        <!-- end #header -->
+		        <div id="page">
+			        <div id="content" style="min-height:100%">
+                        <div class="mainContent">
+                         @RenderBody()
+                        </div>
+                       
+				        <div style="">
+                        
+                        </div>
+				        <div style="clear: both;">&nbsp;</div>
+			        </div>
+			        <!-- end #content -->
+			        @*<div id="sidebar">
+				        
+			        </div>*@
+			        <!-- end #sidebar -->
+			        <div style="clear: both;">&nbsp;</div>
+		        </div>
+		        <!-- end #page -->
+	        </div>
+        </div>
+        <!--div id="footer-wrapper"-->
+	        <div id="footer">
+		        <p>&copy; @DateTime.Now.Year - All Rights Reserved by Exam-Point.com. Design by <a href="http://www.freecsstemplates.org">FCT</a></p>
+	        </div>
+	        <!-- end #footer -->
+        <!--/div-->
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/listeditor")
+        @RenderSection("scripts", required: false)
+    </body>
+</html>

@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - Exam Point</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+    </head>
+    <body>
+        <header id="header">
+            <div class="content-wrapper">
+                <div class="float-left">
+                    <p class="site-title">@Html.ActionLink("Exam Point", "Index", "Home")</p>
+                </div>
+                <div class="float-right">
+                    <section id="login">
+                        @Html.Partial("_LoginPartial")
+                    </section>
+                    <nav>
+                        @*<ul id="menu">
+                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                            @if (Request.IsAuthenticated)
+                            {
+                                <li>@Html.ActionLink("Assessments", "Index", "Assessments")</li>
+                                <li>@Html.ActionLink("Manage Questions", "Index", "Questions")</li>
+                                <!--li>@Html.ActionLink("About", "About", "Home")</li-->
+                                <!--li>@Html.ActionLink("Contact", "Contact", "Home")</li-->
+                            }
+                        </ul>*@
+                        <ul id="menu">
+                            <li class="single"><a href="#" >Item 1</a>  
+                                @*<div>  
+                                Drop down Content  
+                                <div>  *@
+                            </li>  
+                            <li><a href="#" class="drop">Item 2</a>  
+                                <div class="dropdown_2columns"><!-- Begin 2 columns container -->  
+      
+                                <div class="col_2">  
+                                    <h2>Welcome !</h2>  
+                                </div>  
+      
+                                <div class="col_2">  
+                                    <p>Hi and welcome here ! This is a showcase of the possibilities of this awesome Mega Drop Down Menu.</p>               
+                                    <p>This item comes with a large range of prepared typographic stylings such as headings, lists, etc.</p>               
+                                </div>  
+      
+                                <div class="col_2">  
+                                    <h2>Cross Browser Support</h2>  
+                                </div>  
+              
+                                <div class="col_1">  
+                                    <img src="img/browsers.png" width="125" height="48" alt="" />  
+                                </div>  
+              
+                                <div class="col_1">  
+                                    <p>This mega menu has been tested in all major browsers.</p>  
+                                </div>  
+            
+                            </div> 
+                            </li>  
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <div id="body">
+            @RenderSection("featured", required: false)
+            <section class="content-wrapper main-content clear-fix">
+                @RenderBody()
+            </section>
+        </div>
+        <footer id="footer">
+            <div class="content-wrapper">
+                <div class="float-left">
+                    <p>&copy; @DateTime.Now.Year - All Rights Reserved by Exam-Point.com</p>
+                </div>
+            </div>
+        </footer>
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/listeditor")
+        @RenderSection("scripts", required: false)
+    </body>
+</html>

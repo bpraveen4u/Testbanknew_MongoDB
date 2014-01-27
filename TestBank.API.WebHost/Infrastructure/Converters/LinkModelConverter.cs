@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 using TestBank.API.WebHost.Models;
+using TestBank.Entity.Models;
 
 namespace TestBank.API.WebHost.Infrastructure.Converters
 {

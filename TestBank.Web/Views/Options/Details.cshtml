@@ -1,0 +1,35 @@
+@model TestBank.Entity.Model.Option
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Option</legend>
+
+    <div class="display-label">Sort</div>
+    <div class="display-field">@Model.Sort</div>
+
+    <div class="display-label">Type</div>
+    <div class="display-field">@Html.DisplayTextFor(_ => Model.Type).ToString()</div>
+
+    <div class="display-label">Text</div>
+    <div class="display-field">@Model.Text</div>
+
+    <div class="display-label">IsCorrect</div>
+    <div class="display-field">@Model.IsCorrect</div>
+
+    <div class="display-label">Options</div>
+    <div class="display-field">@(Model.Options == null ? "None" : Model.Options.Count.ToString())</div>
+
+    <div class="display-label">IsSerializeAnswer</div>
+    <div class="display-field">@Model.IsSerializeAnswer</div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

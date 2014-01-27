@@ -42,6 +42,11 @@ namespace TestBank.Business.Manager
             return pagedEntity;
         }
 
+        public List<Question> GetAll(string category)
+        {
+            return repository.GetAll(category);
+        }
+
         public Question Get(int id)
         {
             return repository.GetByID(id);

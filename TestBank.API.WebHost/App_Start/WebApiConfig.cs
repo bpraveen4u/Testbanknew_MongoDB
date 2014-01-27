@@ -27,15 +27,27 @@ namespace TestBank.API.WebHost
             );
 
             config.Routes.MapHttpRoute(
-                name: "Assessments",
-                routeTemplate: "api/assessments/{id}",
-                defaults: new { controller = "assessments", id = RouteParameter.Optional }
-            );
-
-            config.Routes.MapHttpRoute(
                 name: "QuestionOptions",
                 routeTemplate: "api/questions/{questionId}/options/{optionId}",
                 defaults: new { controller = "questions", action = "GetQuestionOptions", optionId = RouteParameter.Optional }
+            );
+
+            //config.Routes.MapHttpRoute(
+            //    name: "Category",
+            //    routeTemplate: "api/questions/category/",
+            //    defaults: new { controller = "questions", action = "GetCategory" /*, categoryName = RouteParameter.Optional */}
+            //);
+
+            config.Routes.MapHttpRoute(
+                name: "QuestionCategory",
+                routeTemplate: "api/questions/category/{categoryName}",
+                defaults: new { controller = "questions", action = "GetAllByCategory" /*, categoryName = RouteParameter.Optional */}
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "Assessments",
+                routeTemplate: "api/assessments/{id}",
+                defaults: new { controller = "assessments", id = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(

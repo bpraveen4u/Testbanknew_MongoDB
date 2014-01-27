@@ -104,17 +104,7 @@
     <Compile Include="Infrastructure\Logging\ILogger.cs" />
     <Compile Include="Infrastructure\Logging\LogUtility.cs" />
     <Compile Include="Infrastructure\Logging\NLogLogger.cs" />
-    <Compile Include="Models\AssessmentModel.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Models\LinkModel.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Models\ModelFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Models\PagedModel.cs" />
-    <Compile Include="Models\QuestionModel.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

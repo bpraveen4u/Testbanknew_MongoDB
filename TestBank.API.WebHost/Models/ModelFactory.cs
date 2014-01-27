@@ -7,6 +7,7 @@ using TestBank.Data;
 using System.Web.Http.Routing;
 using TestBank.Entity;
 using AutoMapper;
+using TestBank.Entity.Models;
 
 namespace TestBank.API.WebHost.Models
 {

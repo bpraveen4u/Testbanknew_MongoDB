@@ -1,0 +1,88 @@
+@model IEnumerable<TestBank.Web.ViewModels.AssessmentViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h3>Assessment list</h3>
+
+<p>
+    @Html.ActionLink("New Assessment", "Create")
+</p>
+<table id="listAssessment">
+    <tr>
+        <th></th>
+        <th>
+            Test Name
+        </th>
+        <th>
+            Total Questions
+        </th>
+        @*<th>
+            Link
+        </th>
+        <th>
+            ShortLink
+        </th>
+        <th>
+            Status
+        </th>
+        <th>
+            Enable
+        </th>*@
+        <th>
+            Duration
+        </th>
+       @* <th>
+            MaxOptions
+        </th>*@
+    </tr>
+
+@foreach (var item in Model) {
+    RouteValueDictionary tRVD = new RouteValueDictionary();
+    //var dict = new Dictionary<string, string>();
+    //dict.Add("testId", item.Id.ToString());
+    //tRVD.Add("data", TestBank.Web.Infrastructure.ValueProviders.Crypto.Encrypt(dict));
+    tRVD.Add("testId", TestBank.Web.Infrastructure.Encryption.EncryptDecryptQueryString.Encrypt(item.Id.ToString()));
+        
+    RouteValueDictionary expRVD = new RouteValueDictionary();
+    expRVD.Add("testId", item.Id);
+    expRVD.Add("output", "excel");
+    <tr>
+        <td width="15%">
+            <a href="@Url.Action("Edit",new { id = item.Id })"><img title="Edit" src="@Url.Content("~/Images/edit-icon.png")" alt="Edit"/></a>
+            <a href="@Url.Action("Start", "Answers", tRVD)"><img title="Start Test" src="@Url.Content("~/Images/start.png")" alt="start"/></a>
+            <a href="@Url.Action("Results", "Answers", tRVD)"><img title="Results" src="@Url.Content("~/Images/view_detail.png")" alt="results"/></a>
+            <a href="@Url.Action("Export", "Answers", expRVD)"><img title="Export to excel" src="@Url.Content("~/Images/excel-icon.png")" alt="xls"/></a>
+        </td>
+        <td width="60%">
+			@item.TestName
+        </td>
+        <td width="20%">
+			@(item.Questions == null ? "None" : item.Questions.Count.ToString())
+        </td>
+        
+       @* <td>
+			@item.Link
+        </td>
+        <td>
+			@item.ShortLink
+        </td>
+        <td>
+			@Html.DisplayTextFor(_ => item.Status).ToString()
+        </td>
+        <td>
+			@item.Enable
+        </td>*@
+        <td>
+			@item.Duration min.
+        </td>
+       @* <td>
+			@item.MaxOptions
+        </td>*@
+    </tr>
+}
+
+</table>
+
+

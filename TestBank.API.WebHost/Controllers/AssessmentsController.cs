@@ -10,6 +10,7 @@ using AutoMapper;
 using TestBank.API.WebHost.Models;
 using System.Web.Http.Routing;
 using TestBank.Business.Manager;
+using TestBank.Entity.Models;
 
 namespace TestBank.API.WebHost.Controllers
 {
@@ -116,7 +117,7 @@ namespace TestBank.API.WebHost.Controllers
                     var question = questionManager.Get(questionId);
                     if (question != null)
                     {
-                        questions.Add(TheModelFactory.CreateDetails(question, assessmentId, "AssessmentQuestions", new { assessmentId = assessmentId, questionId = questionId }));
+                        return Request.CreateResponse(HttpStatusCode.OK, TheModelFactory.CreateDetails(question, assessmentId, "AssessmentQuestions", new { assessmentId = assessmentId, questionId = questionId })); 
                     }
                 }
             }

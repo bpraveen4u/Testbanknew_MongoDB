@@ -1,0 +1,34 @@
+﻿@model TestBank.Web.ViewModels.QuestionViewModel.OptionViewModel
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+<tr class="editorRow">
+
+@using (Html.BeginCollectionItem("Options"))
+{
+    
+    <td>
+    @Html.Label("Option")
+    </td>
+    <td>@Html.TextBoxFor(model => model.Id, new { maxlength = "5", style = "width:30px" })
+    </td>
+    <td class="">
+        @*@Html.LabelFor(model => model.Id)*@
+        
+        @Html.ValidationMessageFor(model => model.Id)
+    </td>
+    <td class="">
+        @*@Html.LabelFor(model => model.Text)*@
+        @Html.EditorFor(model => model.Text)
+        @Html.ValidationMessageFor(model => model.Text)
+    </td>
+    <td>@Html.LabelFor(model => model.IsCorrect)
+    </td>
+    <td class="">
+        @Html.CheckBoxFor(model => model.IsCorrect)
+        @Html.ValidationMessageFor(model => model.IsCorrect)
+    </td>
+    <td><a href="#" class="deleteRow">del</a>
+    </td>
+}
+</tr>

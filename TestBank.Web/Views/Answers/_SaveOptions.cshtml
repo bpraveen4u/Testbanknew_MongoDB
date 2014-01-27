@@ -1,0 +1,20 @@
+﻿@using MvcUtil.Html;
+@using TestBank.Web.ViewModels
+@model TestBank.Web.ViewModels.UserAnswersInputViewModel.AnswerInputViewModel
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+@using (Html.BeginCollectionItem("QuestionAnswers"))
+{
+    <tr>
+        <td align="center" valign="top" style="width: 20px; text-align: center;font-weight:bold;">@string.Format("{0}. ", Model.Nr)
+        @Html.HiddenFor(m => m.Nr)</td>
+		<td style="width: 500px;white-space: pre-line; font-weight:bold;">@Html.DisplayFor(m => m.Description)</td>
+	</tr>
+    <tr>
+        <td style="width: 20px;">@Html.HiddenFor(m =>m.QuestionId)</td>
+        <td>@*@Html.RadioButtonForSelectList((x => x.Options[0].IsCorrect, Model.Options, Model.Nr.ToString())*@
+        @if(Model.OptionItems != null){
+        @Html.RadioButtonListFor(x => x.SelectedOption, Model.OptionItems, new { style = "width:20px;" })}</td>
+    </tr>
+}

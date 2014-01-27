@@ -1,0 +1,46 @@
+@model TestBank.Web.ViewModels.QuestionViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div id="MainContent">
+    <table>
+        <tr>
+            <td>Description</td>
+            <td>@Model.Description</td>
+        </tr>
+        <tr>
+            <td>Instructor Remarks</td>
+            <td>@Model.InstructorRemarks</td>
+        </tr>
+        <tr>
+            <td>Category</td>
+            <td>@Model.Category</td>
+        </tr>
+        <tr>
+            <td>Options</td>
+            <td>@(Model.Options == null ? "None" : Model.Options.Count.ToString())</td>
+        </tr>
+        <tr>
+            <td>Correct Score</td>
+            <td>@Model.CorrectScore</td>
+        </tr>
+        <tr>
+            <td>Wrong Score</td>
+            <td>@Model.WrongScore</td>
+        </tr>
+        <tr>
+            <td>Weightage</td>
+            <td>@Model.Weightage</td>
+        </tr>
+    </table>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

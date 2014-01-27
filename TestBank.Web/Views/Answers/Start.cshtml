@@ -1,0 +1,68 @@
+﻿@model TestBank.Web.ViewModels.UserViewModel
+@{
+    ViewBag.Title = "Start Test";
+}
+<h2>
+    Start</h2>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <div class="MainContent">
+        <table>
+            <tr>
+                <td>@Html.LabelFor(model => model.UserId)
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.UserId)
+                </td>
+                <td>
+                    @Html.ValidationMessageFor(model => model.UserId)
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.FirstName)
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.FirstName)
+                </td>
+                <td>
+                    @Html.ValidationMessageFor(model => model.FirstName)
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.LastName)
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.LastName)
+                </td>
+                <td>
+                    @Html.ValidationMessageFor(model => model.LastName)
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.Email)
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.Email)
+                </td>
+                <td>
+                    @Html.ValidationMessageFor(model => model.Email)
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.Qualification)
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.Qualification)
+                </td>
+                <td>
+                    @Html.ValidationMessageFor(model => model.Qualification)
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <p>
+        <input type="submit" value="Start" />
+    </p>
+}

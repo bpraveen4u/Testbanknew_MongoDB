@@ -12,12 +12,17 @@ namespace TestBank.Data.Repositories
         public QuestionRepository(IDatabaseFactory databaseFactory)
             : base(databaseFactory)
         {
+            
+        }
 
+        public List<Question> GetAll(string category)
+        {
+            throw new NotImplementedException();
         }
     }
 
     public interface IQuestionRepository : IRepository<Question, int>
     {
-
+        List<Question> GetAll(string category);
     }
 }

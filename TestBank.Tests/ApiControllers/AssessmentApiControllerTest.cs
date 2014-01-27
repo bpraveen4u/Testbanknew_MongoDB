@@ -21,6 +21,7 @@ using TestBank.Data.Infrastructure;
 using TestBank.API.WebHost.Infrastructure.Filters;
 using System.Web.Http.Controllers;
 using TestBank.Business.Exceptions;
+using TestBank.Entity.Models;
 
 namespace TestBank.Tests.ApiControllers
 {

@@ -1,0 +1,65 @@
+@model IEnumerable<TestBank.Entity.Model.Option>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            Sort
+        </th>
+        <th>
+            Type
+        </th>
+        <th>
+            Text
+        </th>
+        <th>
+            IsCorrect
+        </th>
+        <th>
+            Options
+        </th>
+        <th>
+            IsSerializeAnswer
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+        <td>
+			@item.Sort
+        </td>
+        <td>
+			@Html.DisplayTextFor(_ => item.Type).ToString()
+        </td>
+        <td>
+			@item.Text
+        </td>
+        <td>
+			@item.IsCorrect
+        </td>
+        <td>
+			@(item.Options == null ? "None" : item.Options.Count.ToString())
+        </td>
+        <td>
+			@item.IsSerializeAnswer
+        </td>
+    </tr>
+}
+
+</table>
+
+

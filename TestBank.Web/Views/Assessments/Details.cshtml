@@ -1,0 +1,66 @@
+@model TestBank.Web.ViewModels.AssessmentViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <table>
+        <tr>
+            <td>TestName</td>
+            <td>@Model.TestName</td>
+        </tr>
+        <tr>
+            <td>Questions</td>
+            <td>@(Model.Questions == null ? "None" : Model.Questions.Count.ToString())</td>
+        </tr>
+        <tr>
+            <td>Link</td>
+            <td>@Html.Raw(string.Format("<a href='{0}' target='_blank' >Link</a>", Html.DisplayFor(model => model.Link)))</td>
+        </tr>
+        <tr>
+            <td>ShortLink</td>
+            <td>@Html.Raw(string.Format("<a href='{0}' target='_blank' >Short Link</a>", Html.DisplayFor(model => model.ShortLink)))</td>
+        </tr>
+        <tr>
+            <td>Status</td>
+            <td>@Html.DisplayTextFor(_ => Model.Status).ToString()</td>
+        </tr>
+        <tr>
+            <td>Enable</td>
+            <td>@Model.Enable</td>
+        </tr>
+        <tr>
+            <td>Duration</td>
+            <td>@Model.Duration</td>
+        </tr>
+        <tr>
+            <td>Max Options</td>
+            <td>@Model.MaxOptions</td>
+        </tr>
+        <tr>
+            <td>Creation Date</td>
+            <td>@String.Format("{0:g}", Model.CreatedDate)</td>
+        </tr>
+        <tr>
+            <td>Created User</td>
+            <td>@Model.CreatedUser</td>
+        </tr>
+        <tr>
+            <td>Modified Date</td>
+            <td>@String.Format("{0:g}", Model.ModifiedDate)</td>
+        </tr>
+        <tr>
+            <td>Modified User</td>
+            <td>@Model.ModifiedUser</td>
+        </tr>
+    </table>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

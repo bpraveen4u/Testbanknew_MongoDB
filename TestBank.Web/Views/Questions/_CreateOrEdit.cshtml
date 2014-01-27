@@ -1,0 +1,80 @@
+@model TestBank.Web.ViewModels.QuestionViewModel
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+<div class="MainContent">
+    <table>
+        <tr>
+            <td>@Html.LabelFor(model => model.Description)
+            </td>
+            <td>
+            @Html.EditorFor(model => model.Description)
+            </td>
+            <td>
+            @Html.ValidationMessageFor(model => model.Description)
+            </td>
+        </tr>
+        <tr>
+            <td>
+            @Html.LabelFor(model => model.InstructorRemarks)
+            </td>
+            <td>
+            @Html.EditorFor(model => model.InstructorRemarks)
+            </td>
+            <td>
+            @Html.ValidationMessageFor(model => model.InstructorRemarks)
+            </td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.Category)
+            </td>
+            <td>@Html.EditorFor(model => model.Category)
+            </td>
+            <td>@Html.ValidationMessageFor(model => model.Category)
+            </td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.CorrectScore)
+            </td>
+            <td colspan="2">@Html.TextBoxFor(model => model.CorrectScore, new { style = "width:40px;" })
+            @Html.ValidationMessageFor(model => model.CorrectScore)
+            </td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.WrongScore)
+            </td>
+            <td colspan="2">@Html.TextBoxFor(model => model.WrongScore, new { style = "width:40px;" })
+            @Html.ValidationMessageFor(model => model.WrongScore)
+            </td>
+        </tr>
+        <tr>
+            <td>
+            @Html.LabelFor(model => model.Weightage)
+            </td>
+            <td colspan="2">@Html.TextBoxFor(model => model.Weightage, new { style = "width:40px;" })
+            @Html.ValidationMessageFor(model => model.Weightage)
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <fieldset>
+        <legend>Options</legend>
+        <div >
+        <div>@Html.ValidationMessageFor(model => Model.Options)</div>
+        <table id="editorRows" style="list-style-type: none;padding: 0;margin: 0;">
+            
+        @if (Model != null && Model.Options != null && Model.Options.Count > 0)
+        {
+            foreach (var item in Model.Options)
+            {
+                @Html.Partial("_CreateOrEditOptions", item)
+            }
+        }	
+        </table>
+        </div>
+
+        @Html.ActionLink("Add Option", "AddOption", null, new { id = "addItem" })
+    </fieldset>
+</div>
+
