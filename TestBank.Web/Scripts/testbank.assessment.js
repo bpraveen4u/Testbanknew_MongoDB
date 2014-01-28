@@ -20,12 +20,32 @@ $(document).ready(function () {
     });
     $("#selCategory").trigger("change");
 
+    $('#btnSubmit').unbind("click").bind("click", function () {
+        submit();
+    });
+
     $('#btnAdd').unbind("click").bind("click", function () {
-        $("#allQuestions option:selected").appendTo("#selectedQuestions");
+        $.each($("#allQuestions option:selected"), function (val, opt) {
+            var result = $.grep($("#selectedQuestions option"), function (e) { return e.value == opt.value; });
+            if (result.length == 1) {
+                $(this).remove();
+            }
+            else {
+                $(opt).appendTo("#selectedQuestions");
+            }
+        });
     });
 
     $('#btnAddAll').unbind("click").bind("click", function () {
-        $("#allQuestions option").appendTo("#selectedQuestions");
+        $.each($("#allQuestions option"), function (val, opt) {
+            var result = $.grep($("#selectedQuestions option"), function (e) { return e.value == opt.value; });
+            if (result.length == 1) {
+                $(this).remove();
+            }
+            else {
+                $(opt).appendTo("#selectedQuestions");
+            }
+        });
     });
 
     $('#btnRemove').unbind("click").bind("click", function () {
@@ -43,7 +63,6 @@ $(document).ready(function () {
     });
 
     $('#btnRemoveAll').unbind("click").bind("click", function () {
-        //$("#selectedQuestions option").appendTo("#allQuestions");
         $.each($("#selectedQuestions option"), function (val, opt) {
             var result = $.grep(questionsList, function (e) { return e.id == opt.value; });
             if (result.length == 1) {
@@ -57,10 +76,13 @@ $(document).ready(function () {
         });
     });
 
-    //var t = @Html.Raw(Json.Encode(Model));
-    //var myModel = @{@Html.Raw(Json.Encode(Model));}
-
 });
+
+function submit() {
+    $.each($("#selectedQuestions option"), function (val, opt) {
+        opt.selected = true;
+    });
+}
 
 function getQuestionsByCat(cat) {
     $.ajax({

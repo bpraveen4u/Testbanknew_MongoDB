@@ -18,7 +18,7 @@ namespace TestBank.API.WebHost.Controllers
     {
         private readonly AssessmentManager manager;
         private readonly QuestionManager questionManager;
-        const int PAGE_SIZE = 3;
+        const int PAGE_SIZE = 10;
         public AssessmentsController(AssessmentManager manager, QuestionManager questionManager)
         {
             this.manager = manager;

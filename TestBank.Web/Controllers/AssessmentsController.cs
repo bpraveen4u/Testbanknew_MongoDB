@@ -100,8 +100,8 @@ namespace TestBank.Web.Controllers
                 return RedirectToAction("Index");
             }
 
-            GetAssessmentData(assessmentViewModel);
-            return View(assessmentViewModel);
+            //GetAssessmentData(assessmentViewModel);
+            return Create();
         }
 
         //
@@ -147,15 +147,15 @@ namespace TestBank.Web.Controllers
                 if (assessmentViewModel != null)
                 {
                     assessmentViewModel.Questions = assessmentViewModel.QuestionIds.Select(x => new QuestionReferenceViewModel { QuestionId = x }).ToList();
-                    var assessment = TestBankApiProxy.Get<AssessmentModel>(ApiKey, ResourceEndPoint.Assessments_Get, assessmentViewModel.Id);
-                    var assessmentUpd = Mapper.Map<AssessmentViewModel, AssessmentModel>(assessmentViewModel);
+                    //var assessment = TestBankApiProxy.Get<AssessmentDetailsModel>(ApiKey, ResourceEndPoint.Assessments_Get, assessmentViewModel.Id);
+                    var assessmentUpd = Mapper.Map<AssessmentViewModel, AssessmentDetailsModel>(assessmentViewModel);
 
-                    assessment = TestBankApiProxy.Put<AssessmentModel>(ApiKey, assessmentUpd, ResourceEndPoint.Assessments_Put, assessmentViewModel.Id);
+                    var assessment = TestBankApiProxy.Put<AssessmentDetailsModel>(ApiKey, assessmentUpd, ResourceEndPoint.Assessments_Put, assessmentViewModel.Id);
                     return RedirectToAction("Index");
                 }
             }
-            GetAssessmentData(assessmentViewModel);
-            return View(assessmentViewModel);
+            //GetAssessmentData(assessmentViewModel);
+            return Edit(assessmentViewModel.Id);
         }
 
         //

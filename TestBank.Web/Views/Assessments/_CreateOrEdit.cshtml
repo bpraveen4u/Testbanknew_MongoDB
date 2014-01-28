@@ -80,7 +80,7 @@
                             <input id="btnRemoveAll"type="button" value=" << " />
                         </td>
                         <td>
-                            @Html.ListBoxFor(m => m.Questions, Model.Questions.Select(s => new SelectListItem() { Value = s.QuestionId.ToString(), Text = s.Description }), 
+                            @Html.ListBoxFor(m => m.QuestionIds, Model.Questions.Select(s => new SelectListItem() { Value = s.QuestionId.ToString(), Text = s.Description }), 
                                 new { @id = "selectedQuestions", @style = "height:200px; width: 300px" }) 
                         </td>
                     </tr>
