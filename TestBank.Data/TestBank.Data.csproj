@@ -72,6 +72,9 @@
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Repositories\AssessmentRepository.cs" />
     <Compile Include="Repositories\AssessmentMongoRepository.cs" />
+    <Compile Include="Repositories\UserAnswerMongoRepository.cs" />
+    <Compile Include="Repositories\KeyStoreMongoRepository.cs" />
+    <Compile Include="Repositories\UserMongoRepository.cs" />
     <Compile Include="Repositories\QuestionMongoRepository.cs" />
     <Compile Include="Repositories\QuestionRepository.cs" />
     <Compile Include="Util.cs" />

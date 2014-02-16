@@ -21,6 +21,9 @@ namespace TestBank.API.WebHost.App_Start
             //kernel.Bind<IQuestionRepository>().To<QuestionRepository>();
             kernel.Bind<IAssessmentRepository>().To<AssessmentMongoRepository>();
             kernel.Bind<IQuestionRepository>().To<QuestionMongoRepository>();
+            kernel.Bind<IUserRepository>().To<UserMongoRepository>();
+            kernel.Bind<IUserAnswerRepository>().To<UserAnswerMongoRepository>();
+            kernel.Bind<IKeyStoreRepository>().To<KeyStoreMongoRepository>();
             //kernel.Bind<AssessmentManager>().ToSelf();
         }
     }

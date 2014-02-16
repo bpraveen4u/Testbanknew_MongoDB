@@ -39,6 +39,9 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.0.1\lib\net40\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus">
+      <HintPath>..\packages\EPPlus.3.1.3.3\lib\net35\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="FluentValidation">
       <HintPath>..\packages\FluentValidation.5.0.0.1\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
@@ -53,10 +56,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\BusinessException.cs" />
+    <Compile Include="Infrastructure\Cache\CacheStore.cs" />
     <Compile Include="Manager\AssessmentManager.cs" />
     <Compile Include="Manager\QuestionManager.cs" />
+    <Compile Include="Manager\UserAnswersManager.cs" />
+    <Compile Include="Manager\UsersManager.cs" />
     <Compile Include="Manager\Validator\AssessmentValidator.cs" />
     <Compile Include="Manager\Validator\QuestionValidator.cs" />
+    <Compile Include="Manager\Validator\UserAnswerValidator.cs" />
+    <Compile Include="Manager\Validator\UserValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +75,10 @@
     <ProjectReference Include="..\TestBank.Entity\TestBank.Entity.csproj">
       <Project>{49F779F7-1D28-4014-8308-D563DFC02524}</Project>
       <Name>TestBank.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestBank.Infrastructure\TestBank.Infrastructure.csproj">
+      <Project>{6e060b03-b965-4e48-857f-61600e028a53}</Project>
+      <Name>TestBank.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -7,12 +7,12 @@ using System.Security.Cryptography;
 
 namespace TestBank.Entity.Models
 {
-    public enum Roles
-    {
-        Student = 0,
-        Instructor = 1,
-        Administrator = 2
-    }
+    //public enum Roles
+    //{
+    //    Student = 0,
+    //    Instructor = 1,
+    //    Administrator = 2
+    //}
     public class UserModel //: IModel
     {
         public int Sort { get; set; }

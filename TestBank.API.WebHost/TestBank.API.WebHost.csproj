@@ -84,11 +84,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\ServiceConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AssessmentsController.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
+    <Compile Include="Controllers\UserAnswersController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Infrastructure\AutoMapper\Profiles\QuestionModelMapperProfile.cs" />
     <Compile Include="Infrastructure\Filters\BusinessExceptionAttribute.cs" />
     <Compile Include="Infrastructure\Filters\HttpsRequiredDelegatingHandler.cs" />
